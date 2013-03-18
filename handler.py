@@ -19,6 +19,12 @@ class BaseHandler(tornado.web.RequestHandler):
         user = self.db.query(User).get(user_id)
         return user
 
+class PageNotFoundHandler(BaseHandler):
+    def get(self):
+        self.render("404.html")
+    def post(self):
+        self.render("404.html")
+        
 class IndexHandler(BaseHandler):
     def get(self):
         articles = self.db.query(Article).filter(Article.status=='published').all()

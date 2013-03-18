@@ -21,6 +21,7 @@ class App(tornado.web.Application):
             (r'/admin', AdminHandler),
             (r'/admin/write', WriteHandler),
             (r'/article/([0-9]+).html', SingleHandler),
+            (r'.*', PageNotFoundHandler),
         ]
 
         settings = {
