@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block container %}
+<article>
+	<header class="page-header">
+		<h1>{{article.title}}</h1>
+		<span>{{ article.created.strftime('%b %d %Y') }}</span>
+	</header>
+	{% raw article.markdown %}
+</article>
+{% end %}

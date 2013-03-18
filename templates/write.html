@@ -1,0 +1,30 @@
+{% extends "admin_base.html" %}
+{% block container %}
+
+<form class="form-horizontal" action="/admin/write" method="post">
+	<fieldset>
+		<legend>撰写文章</legend>
+		<div class="control-group">
+			<label class="control-label" for="input-title">标题</label>
+			<div class="controls">
+				<input type="text" class="span6" name="title" id="input-title" value="{% try %}{{ article.title }}{% except %}{{ "" }}{% end %}">
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="textarea">内容</label>
+			<div class="controls">
+				<textarea name="content" rows="20" class="span7 input-content" id="textarea">{% try %}{{ article.content }}{% except %}{{ "" }}{% end %}</textarea>
+			</div>
+		</div>
+		<div class="form-actions">
+			<select class="span2" name="status">
+				<option value="published">发布</option>
+				<option value="draft">草稿</option>
+			</select>
+			<button type="submit" class="btn btn-primary">保存更改</button>
+			<button class="btn">取消</button>
+		</div>
+		<input type="hidden" name="id" value="{% try %}{{ article.id }}{% except %}{{ "" }}{% end %}"/>
+	</fieldset>
+</form>
+{% end %}
