@@ -53,6 +53,7 @@ class LoginHandler(BaseHandler):
         user = self.db.query(User).filter(User.username==username).first()
         if not user:
             self.render("login.html", user=username, status=2)
+            return
 
         hash = hashlib.md5(password+user.salt).hexdigest()
 

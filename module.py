@@ -28,10 +28,10 @@ class User(Base):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
-    username = Column(String(64)) 
+    username = Column(String(64), nullable=False) 
     nickname = Column(String(64))
-    password = Column(String(128))
-    salt = Column(String(128)) 
+    password = Column(String(128), nullable=False)
+    salt = Column(String(128), nullable=False) 
     email = Column(String(128))
     last_ip = Column(String(128)) 
 
@@ -88,7 +88,7 @@ if __name__ == '__main__':
     pwd = hashlib.md5('123456').hexdigest()
     salt = hashlib.md5(datetime.now().ctime()).hexdigest()
     pwd = hashlib.md5(pwd+salt).hexdigest()
-    user = User(username=username, password=pwd, nickname="Zorro", email='zqqf16@gmail.com')
+    user = User(username=username, password=pwd, salt=salt, nickname="Zorro", email='zqqf16@gmail.com')
     session.add(user)
 
     article = Article(title=u'Hello World', content=u'这是一篇默认文章', author=user)
