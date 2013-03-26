@@ -88,7 +88,7 @@ class Config(Base):
 if __name__ == '__main__':
     import hashlib
 
-    init_db(Base)
+    init_db()
     session = get_session()
 
     #Don't forget to change it!
