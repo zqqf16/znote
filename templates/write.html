@@ -16,10 +16,17 @@
 				<textarea name="content" rows="20" class="span7 input-content" id="textarea">{% try %}{{ article.content }}{% except %}{{ "" }}{% end %}</textarea>
 			</div>
 		</div>
+		<div class="control-group">
+			<label class="control-label" for="input-title">自定义URL</label>
+			<div class="controls">
+				<input type="text" class="span6" name="slug" id="input-title" value="{% try %}{{ article.slug }}{% except %}{{ "" }}{% end %}">
+			</div>
+		</div>
 		<div class="form-actions">
 			<select class="span2" name="status">
-				<option value="published">发布</option>
+				<option value="publish">发布</option>
 				<option value="draft">草稿</option>
+				<option value="fixed">固定在导航页</option>
 			</select>
 			<button type="submit" class="btn btn-primary">保存更改</button>
 			<button class="btn">取消</button>

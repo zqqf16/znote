@@ -5,11 +5,11 @@ import hashlib
 import tornado.web
 from datetime import datetime
 from module import * 
+from api import *
 
 class BaseHandler(tornado.web.RequestHandler):
-    @property
-    def db(self):
-        return self.application.db
+    def initialize(self, **kargs):
+        self.db = get_session()
 
     def get_current_user(self):
         user_id = self.get_secure_cookie("user")
@@ -27,15 +27,23 @@ class PageNotFoundHandler(BaseHandler):
         
 class IndexHandler(BaseHandler):
     def get(self):
-        articles = self.db.query(Article).filter(Article.status=='published').all()
-        self.render("index.html", articles=articles)
+        articles = self.db.query(Article).filter(Article.status=='publish').all()
+        self.render("index.html", articles=articles, api=Api(self.db))
 
 class SingleHandler(BaseHandler):
     def get(self, article_id):
        article = self.db.query(Article).get(article_id)
        if not article: 
            raise tornado.web.HTTPError(404)
-       self.render("single.html", article=article)
+       self.render("single.html", article=article, api=Api(self.db))
+
+class PageHandler(BaseHandler):
+    def get(self, article_slug):
+        article = self.db.query(Article).filter(Article.slug==article_slug).first()
+        if not article: 
+            raise tornado.web.HTTPError(404)
+        self.render("single.html", article=article, api=Api(self.db))
+
 
 class LoginHandler(BaseHandler):
     def get(self):
@@ -85,7 +93,8 @@ class WriteHandler(BaseHandler):
         title = self.get_argument("title", default=None)
         content = self.get_argument("content", default=None)
         id = self.get_argument("id", default=None)
-        status = self.get_argument("status", default="published")
+        status = self.get_argument("status", default="publish")
+        slug = self.get_argument("slug", default=None)
             
         if id:
             article = self.db.query(Article).get(id)
@@ -93,12 +102,14 @@ class WriteHandler(BaseHandler):
             article.content = content
             article.status = status
             article.author_id = self.current_user.id
+            article.slug = slug
             article.modified = datetime.now()
 
         else:
             article = Article(title=title, 
                               content=content,
                               status=status,
+                              slug=slug,
                               author_id=self.current_user.id
                              )
             self.db.add(article)

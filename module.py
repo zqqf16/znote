@@ -8,17 +8,25 @@ from sqlalchemy import Column, Integer, String, DateTime, Text, Enum
 from sqlalchemy import ForeignKey, Table  
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.orm import defer, undefer
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
 #Time
 from datetime import datetime
 #Markdown2
 import markdown2
 
-import db
-
 #--------------------------------
 # Database
 #--------------------------------
 Base = declarative_base()
+engine = create_engine('sqlite:///zn.db', echo=False)
+
+def init_db():
+    Base.metadata.create_all(engine)
+
+def get_session():
+    return sessionmaker(bind=engine)()
 
 #--------------------------------
 # Tables
@@ -49,7 +57,7 @@ class Article(Base):
     author_id = Column(Integer, ForeignKey('users.id'))
     title = Column(String(128), nullable=False)
     content = Column(Text, nullable=False)
-    status = Column(Enum('published','draft'), default='published')
+    status = Column(Enum('publish','draft','fixed'), default='publish')
     slug = Column(String(128), default=None)
     view_count = Column(Integer, default=0)
     #relationship
@@ -80,8 +88,8 @@ class Config(Base):
 if __name__ == '__main__':
     import hashlib
 
-    db.init_db(Base)
-    session = db.get_session()
+    init_db(Base)
+    session = get_session()
 
     #Don't forget to change it!
     username = 'zqqf16'
