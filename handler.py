@@ -42,7 +42,7 @@ class PageHandler(BaseHandler):
         article = self.db.query(Article).filter(Article.slug==article_slug).first()
         if not article: 
             raise tornado.web.HTTPError(404)
-        self.render("single.html", article=article, api=Api(self.db))
+        self.render("page.html", article=article, api=Api(self.db))
 
 
 class LoginHandler(BaseHandler):
