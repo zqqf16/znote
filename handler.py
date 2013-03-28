@@ -10,6 +10,7 @@ from api import *
 class BaseHandler(tornado.web.RequestHandler):
     def initialize(self, **kargs):
         self.db = get_session()
+        self.api = Api(self.db)
 
     def get_current_user(self):
         user_id = self.get_secure_cookie("user")
@@ -28,21 +29,21 @@ class PageNotFoundHandler(BaseHandler):
 class IndexHandler(BaseHandler):
     def get(self):
         articles = self.db.query(Article).filter(Article.status=='publish').all()
-        self.render("index.html", articles=articles, api=Api(self.db))
+        self.render("index.html", articles=articles, api=self.api)
 
 class SingleHandler(BaseHandler):
     def get(self, article_id):
        article = self.db.query(Article).get(article_id)
        if not article: 
            raise tornado.web.HTTPError(404)
-       self.render("single.html", article=article, api=Api(self.db))
+       self.render("single.html", article=article, api=self.api)
 
 class PageHandler(BaseHandler):
     def get(self, article_slug):
         article = self.db.query(Article).filter(Article.slug==article_slug).first()
         if not article: 
             raise tornado.web.HTTPError(404)
-        self.render("page.html", article=article, api=Api(self.db))
+        self.render("page.html", article=article, api=self.api)
 
 
 class LoginHandler(BaseHandler):
