@@ -117,3 +117,18 @@ class WriteHandler(BaseHandler):
 
         self.db.commit()
         self.redirect("/admin")
+
+class CategoryHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        self.render("category.html")
+
+    @tornado.web.authenticated
+    def post(self):
+        action = self.get_argument("action", default=None)
+        name = self.get_argument("name", default=None)
+        id = self.get_argument("id", default=None)
+
+        if action == "add":
+            if not name:
+

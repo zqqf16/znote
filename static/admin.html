@@ -32,12 +32,12 @@
             </div>
 			<ul class="nav pull-right">
 				<li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">设置<b class="caret"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-wrench icon-white"></i>设置<b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a href="#">用户</a></li>
-				  <li><a href="#">系统</a></li>
+                  <li><a href="#"><i class="icon-user"></i>用户</a></li>
+		              <li><a href="#"><i class="icon-cog"></i>系统</a></li>
                   <li class="divider"></li>
-                  <li><a href="#">退出</a></li>
+                  <li><a href="#"><i class="icon-off"></i>退出</a></li>
                 </ul>
 				</li>
 			</ul>
@@ -45,25 +45,49 @@
         </div>
       </div>
     </header>
-    <div class="container">
-		<div class="row">
-			<div class="subnav">
-          <ul class="nav nav-pills">
-            <li class="active"><a href="#javascript">所有插件</a></li>
-            <li class=""><a href="#modals">对话框</a></li>
-            <li class=""><a href="#dropdowns">下拉项</a></li>
-            <li><a href="#scrollspy">滚动侦测</a></li>
-            <li><a href="#tabs">标签页</a></li>
-            <li><a href="#tooltips">工具提示</a></li>
-            <li><a href="#popovers">弹出提示</a></li>
-            <li><a href="#alerts">通知</a></li>
-            <li><a href="#buttons">按钮</a></li>
-            <li><a href="#collapse">折叠</a></li>
-            <li><a href="#carousel">轮播</a></li>
-            <li><a href="#typeahead">输入提醒</a></li>
-          </ul>
+    <div class="container-fluid">
+		  <div class="row-fluid">
+        <div class="span2 ">
+          <button type="button" class="span10 btn btn-primary"><i class="icon-pencil icon-white"></i>撰写</button>
         </div>
-		</div>
+        <div class="span10 ">
+          <div class="btn-toolbar">
+            <div class="btn-group">
+                <button class="btn dropdown-toggle" data-toggle="dropdown">所有分类 <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  <li><a href="#">分类一</a></li>
+                  <li><a href="#">分类二</a></li>
+                  <li><a href="#">分类三</a></li>
+                  <li class="divider"></li>
+                  <li><a href="#">未分类</a></li>
+                </ul>
+            </div>
+            <div class="btn-group">
+              <button class="btn">1</button>
+              <button class="btn">2</button>
+            </div>
+            <div class="btn-group">
+              <button class="btn">8</button>
+            </div>
+          </div>
+          <table class="table table-hover">
+            <tbody>
+              <tr> 
+                <td>1</td>
+                <td><a href="#"><i class="icon-file"></i> Hello 世界</a></td>
+                <td class="span2"><span class="badge badge-success">已发布</span></td>
+                <td class="span2">2013-3-13</td> 
+              </tr>
+              <tr> 
+                <td>1</td>
+                <td><a href="#"><i class="icon-bookmark"></i> Hello 世界</a></td>
+                <td class="sapn2"><span class="badge badge-warning">草稿</span></td>
+                <td class="span2">2013-3-13</td> 
+              </tr>
+            </tbody>
+          </table>
+		    </div>
+      </div>
     </div>
 </body>
 </html>
