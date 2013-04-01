@@ -9,9 +9,22 @@
 	<link rel="stylesheet" href="css/bootstrap-responsive.min.css">
 	<link rel="shortcut icon" href="image/favicon.png" type="image/png">
 	<script src="js/jquery-1.9.1.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
+	<script src="js/bootstrap.js"></script>
   <script src="js/ace/ace.js"></script>
   <script src="js/admin.js"></script>
+  <script type="text/javascript">
+  $(document).ready(function(){
+  var editor = ace.edit("post-content");
+  editor.setTheme("ace/theme/textmate");
+  editor.getSession().setMode("ace/mode/markdown");
+  editor.getSession().setUseWrapMode(true);
+  editor.renderer.setShowGutter(true);
+  editor.setShowPrintMargin(false);
+  editor.setFontSize(16);
+  window.editor = editor;
+
+});
+  </script>
 </head>
 <body>
 	 <header class="navbar navbar-inverse navbar-static-top">

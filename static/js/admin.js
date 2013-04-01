@@ -1,10 +1,16 @@
 $(document).ready(function(){
-	var editor = ace.edit("post-content");
-	editor.setTheme("ace/theme/textmate");
-	editor.getSession().setMode("ace/mode/markdown");
-	editor.getSession().setUseWrapMode(true);
-	editor.renderer.setShowGutter(true);
-	editor.setShowPrintMargin(false);
-	editor.setFontSize(16);
-	window.editor = editor;
+	
+
 });
+
+!function ($) {
+	var tools = '[data-toggle="tools"] tr'
+	$(document).on('mouseover.tools', tools, function(e){
+		var $this = $(this);
+		$this.find(".tools-bar").show();
+	})
+	$(document).on('mouseout.tools', tools, function(e){
+		var $this = $(this);
+		$this.find(".tools-bar").hide();
+	})
+}(window.jQuery)

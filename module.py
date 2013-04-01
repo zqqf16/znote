@@ -57,7 +57,7 @@ class Article(Base):
     author_id = Column(Integer, ForeignKey('users.id'))
     title = Column(String(128), nullable=False)
     content = Column(Text, nullable=False)
-    status = Column(Enum('publish','draft','fixed'), default='publish')
+    status = Column(Enum('publish','draft','page','trash'), default='publish')
     slug = Column(String(128), default=None)
     view_count = Column(Integer, default=0)
     #relationship
