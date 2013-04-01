@@ -129,6 +129,4 @@ class CategoryHandler(BaseHandler):
         name = self.get_argument("name", default=None)
         id = self.get_argument("id", default=None)
 
-        if action == "add":
-            if not name:
 
