@@ -33,10 +33,12 @@ class IndexHandler(BaseHandler):
 
 class SingleHandler(BaseHandler):
     def get(self, article_id):
-       article = self.db.query(Article).get(article_id)
-       if not article: 
-           raise tornado.web.HTTPError(404)
-       self.render("single.html", article=article, api=self.api)
+        article = self.db.query(Article).get(article_id)
+        if not article: 
+            raise tornado.web.HTTPError(404)
+        article.view_count += 1
+        self.db.commit()
+        self.render("single.html", article=article, api=self.api)
 
 class PageHandler(BaseHandler):
     def get(self, article_slug):
@@ -76,8 +78,28 @@ class LoginHandler(BaseHandler):
 class AdminHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        articles = self.db.query(Article).all()
-        self.render("admin.html", articles=articles)
+        category = self.get_argument("category", default=None)
+        status = self.get_argument("status", default=None)
+        order_by = self.get_argument("order_by", default=None)
+
+        result = self.db.query(Article)
+        if category:
+            c_id = None if category == 'none' else category
+            if category != 'all':
+                result = result.filter(Article.category_id == c_id)
+        if status:
+            result = result.filter(Article.status == status)
+        if order_by:
+            order = {
+                'create': Article.created,
+                'modify': Article.modified,
+                'view': Article.view_count,
+            }
+            result = result.order_by(order[order_by])
+
+        articles = result.all()
+        self.render("admin.html", articles=articles, api=self.api, 
+            category=category, status=status, order_by=order_by)
 
 class WriteHandler(BaseHandler):
     @tornado.web.authenticated
@@ -96,6 +118,7 @@ class WriteHandler(BaseHandler):
         id = self.get_argument("id", default=None)
         status = self.get_argument("status", default="publish")
         slug = self.get_argument("slug", default=None)
+        category_id = self.get_argument("category", default=None)
             
         if id:
             article = self.db.query(Article).get(id)
@@ -105,13 +128,14 @@ class WriteHandler(BaseHandler):
             article.author_id = self.current_user.id
             article.slug = slug
             article.modified = datetime.now()
+            article.category_id = category_id
 
         else:
             article = Article(title=title, 
                               content=content,
                               status=status,
                               slug=slug,
-                              author_id=self.current_user.id
+                              author_id=self.current_user.id,
                              )
             self.db.add(article)
 

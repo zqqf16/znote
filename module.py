@@ -43,11 +43,6 @@ class User(Base):
     email = Column(String(128))
     last_ip = Column(String(128)) 
 
-article_category = Table('relationships', Base.metadata, 
-                         Column('article_id', Integer, ForeignKey('articles.id')), 
-                         Column('category_id', Integer, ForeignKey('categories.id'))
-                        )
-
 #articles
 class Article(Base):
     __tablename__ = 'articles'
@@ -55,6 +50,7 @@ class Article(Base):
     created = Column(DateTime, default=datetime.now)
     modified = Column(DateTime, default=datetime.now)
     author_id = Column(Integer, ForeignKey('users.id'))
+    category_id = Column(Integer, ForeignKey('categories.id'))
     title = Column(String(128), nullable=False)
     content = Column(Text, nullable=False)
     status = Column(Enum('publish','draft','page','trash'), default='publish')
@@ -62,11 +58,7 @@ class Article(Base):
     view_count = Column(Integer, default=0)
     #relationship
     author = relationship('User', backref=backref('articles', lazy='dynamic'))
-    categories = relationship('Category', 
-                            secondary=article_category, 
-                            passive_deletes=True, 
-                            backref=backref('articles', lazy='dynamic')
-                           )
+    category = relationship('Category', backref=backref('articles', lazy='dynamic'))
 
     @hybrid_property
     def markdown(self):
@@ -101,6 +93,6 @@ if __name__ == '__main__':
 
     article = Article(title=u'Hello World', content=u'这是一篇默认文章', author=user)
     catg = Category(name=u'测试')
-    article.categories.append(catg)
+    article.category = catg
     session.add(article)
     session.commit()

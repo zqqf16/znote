@@ -16,36 +16,50 @@
       </div>
       <div class="btn-group pull-right">
         <button class="btn dropdown-toggle" data-toggle="dropdown">排序方式 <span class="caret"></span></button>
-        <ul class="dropdown-menu">
-          <li><a href="#">最后发布</a></li>
-          <li><a href="#">最后修改</a></li>
-          <li><a href="#">最多访问</a></li>
+        <ul class="dropdown-menu" data-toggle="query">
+          <li><a href="create" data-query="order_by">最新撰写</a></li>
+          <li><a href="modify" data-query="order_by">最新修改</a></li>
+          <li><a href="view" data-query="order_by">最多访问</a></li>
         </ul>
       </div>
       <div class="btn-group pull-right">
-        <button class="btn dropdown-toggle" data-toggle="dropdown">所有分类 <span class="caret"></span></button>
-        <ul class="dropdown-menu">
-          <li><a href="#">分类一</a></li>
-          <li><a href="#">分类二</a></li>
-          <li><a href="#">分类三</a></li>
+        <button class="btn dropdown-toggle" data-toggle="dropdown">
+          {% if category != 'all' and category != 'none' %}
+            {{api.get_category_by_id(category).name}}
+          {% else %}
+            所有分类 
+          {% end if %} <span class="caret"></span></button>
+        <ul class="dropdown-menu" data-toggle="query">
+          {% for c in api.get_categories() %}
+          <li><a href="{{c.id}}" data-query="category">{{c.name}}</a></li>
+          {% end for %}
           <li class="divider"></li>
-          <li><a href="#">未分类</a></li>
+          <li><a href="none" data-query="category">未分类</a></li>
+          {% if category != 'all' %}
+            <li class="divider"></li>
+            <li><a href="all" data-query="category">全部分类</a></li>
+          {% end if %}
         </ul>
       </div>
     </div>
-    <table class="table table-hover main">
+    <table class="table table-hover main" data-toggle="tools">
       <tbody>
       {% for article in articles %}
         <tr id="{{article.id}}"> 
           <td class="span1"><span class="badge">{{article.view_count}}</span></td>
           <td>
             <a href="/admin/write?id={{article.id}}"><i class="icon-file"></i> {{article.title}}</a>
-            <span class="pull-right visible-desktop">
-              <a href="#"><i class="icon-edit"></i> 编辑</a>
-              <a href="#"><i class="icon-remove"></i> 删除</a>
+            <span class="pull-right hide tools-bar">
+              <a href="/admin/write?id={{article.id}}"><i class="icon-edit"></i> 编辑</a>
+              <a href="/admin/delete?id={{article.id}}"><i class="icon-remove"></i> 删除</a>
             </span>
           </td>
-          <td class="span1"><span class="label label-info">生活</span></td>
+          <td class="span1">
+          {% if article.category %}
+            <span class="label label-info">{{article.category.name}}</span></td>
+          {% else %}
+            <span class="label">未分类</span></td>
+          {% end if %}
           <td class="span2">{{article.modified.strftime('%b %d %Y')}}</td> 
         </tr>
         {% end for %}
