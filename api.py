@@ -3,7 +3,7 @@
 
 from module import * 
 
-class Api():
+class ModuleAPI():
     def __init__(self, db):
         self.db = db
 

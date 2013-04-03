@@ -42,4 +42,45 @@
 		window.location.href = get_query_url(type, value);
 		return false;
 	})
+
+	var edit = '[data-toggle="edit-inline"]';
+	$(document).on('click.edit', edit, function(e){
+		var $this = $(this)
+		, $input = $($this.attr("href"));
+		$this.addClass("hide");
+		$input.removeClass("hide");
+		$input.val($this.html());
+		$input.focus();
+		var fallback = function() {
+			$this.removeClass("hide");
+			$input.addClass("hide");
+			$this.html($input.val());
+		}
+		$input.on('blur', function(e){
+			fallback();
+		});
+		$input.on("keydown", function(e) {
+			if (e.keyCode == 13) {
+				fallback();
+			}
+		})
+	})
+
+	var action = '[data-toggle="action"]';
+	$(document).on('click.action', action, function(e){
+		var $this = $(this)
+		, title = $("#title").html()
+		, content = window.editor.getValue()
+		, $id = $("#id")
+		, id = $id.val();
+
+		alert(title);
+		$.post("/admin/write", {title: title, content: content, id: id}, function(result){
+			if (result.status == 0){
+				$id.val(result.article.id)
+			} else {
+				alert("error")
+			}
+		})
+	})
 }(window.jQuery)

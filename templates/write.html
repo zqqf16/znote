@@ -1,37 +1,82 @@
 {% extends "admin_base.html" %}
 {% block container %}
 
-<form class="form-horizontal" action="/admin/write" method="post">
-	<fieldset>
-		<legend>撰写文章</legend>
-		<div class="control-group">
-			<label class="control-label" for="input-title">标题</label>
-			<div class="controls">
-				<input type="text" class="span6" name="title" id="input-title" value="{% try %}{{ article.title }}{% except %}{{ "" }}{% end %}">
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label" for="textarea">内容</label>
-			<div class="controls">
-				<textarea name="content" rows="20" class="span7 input-content" id="textarea">{% try %}{{ article.content }}{% except %}{{ "" }}{% end %}</textarea>
-			</div>
-		</div>
-		<div class="control-group">
-			<label class="control-label" for="input-title">自定义URL</label>
-			<div class="controls">
-				<input type="text" class="span6" name="slug" id="input-title" value="{% try %}{{ article.slug }}{% except %}{{ "" }}{% end %}">
-			</div>
-		</div>
-		<div class="form-actions">
-			<select class="span2" name="status">
-				<option value="publish">发布</option>
-				<option value="draft">草稿</option>
-				<option value="fixed">固定在导航页</option>
-			</select>
-			<button type="submit" class="btn btn-primary">保存更改</button>
-			<button class="btn">取消</button>
-		</div>
-		<input type="hidden" name="id" value="{% try %}{{ article.id }}{% except %}{{ "" }}{% end %}"/>
-	</fieldset>
-</form>
+<div class="row-fluid main">
+  <div class="span6 title">
+    <h4><a id="title" href="#title-edit" data-toggle="edit-inline">
+    	{% if article %} {{ article.title }} {% else %}标题{% end if%}</a></h4>
+    <input id="title-edit" class="span10 hide" type="text">
+  </div>
+  <div class="pull-right btn-toolbar">
+    <div class="btn-group">
+      <button class="btn dropdown-toggle" data-toggle="dropdown">未分类 <span class="caret"></span></button>
+      <ul class="dropdown-menu">
+        <li><a href="#">未分类</a></li>
+        {% for c in api.get_categories() %}
+          <li><a href="{{c.id}}" data-query="category">{{c.name}}</a></li>
+        {% end for %}
+        <li class="divider"></li>
+        <li><a href="#myModal" role="button" data-toggle="modal">添加分类</a></li>
+      </ul>
+    </div>
+    <div class="btn-group">
+      <button class="btn" data-toggle="action" date-type="publish">发布</button>
+      <button class="btn dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="#" data-toggle="action" date-type="draft">保存草稿</a></li>
+        <li class="divider"></li>
+        <li><a href="#" data-toggle="action" date-type="trash">删除</a></li>
+      </ul>
+    </div>
+    <div class="btn-group">
+      <button class="btn">返回</button>
+    </div>
+  </div>
+</div>
+<div id="myModal" class="modal hide span3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="false">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">添加分类</h3>
+  </div>
+  <div class="modal-body">
+    <form>
+      <input type="text" placeholder="名称">
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+    <button class="btn btn-primary">保存</button>
+  </div>
+</div>
+<div class="row-fluid">
+  <div class="" id="post-content" style="height:400px;">
+  	{% if article %}
+		{{article.content}}
+	{% end if %}
+  </div>
+</div>
+{% if article %} 
+	<input id="id" style="display:none" type="text" value="{{article.id}}" />
+{% else %}
+	<input id="id" style="display:none" type="text" value="0" />
+{% end if %}
+<script src="/static/js/ace/ace.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		var editor = ace.edit("post-content");
+		editor.setTheme("ace/theme/textmate");
+		editor.getSession().setMode("ace/mode/markdown");
+		editor.getSession().setUseWrapMode(true);
+		editor.renderer.setShowGutter(true);
+		editor.setShowPrintMargin(false);
+		editor.setFontSize(16);
+		var h = $(window).height()-100;
+		if (h < 400) h = 400;
+		$("#post-content").css("height", h);
+		editor.resize();
+		window.editor = editor;
+	});
+</script>
 {% end %}

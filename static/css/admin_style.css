@@ -29,3 +29,7 @@ body {
   margin-top: 10px;
   margin-bottom: 10px;
 }
+
+.dropdown-menu {
+  min-width: 60px;
+}

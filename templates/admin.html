@@ -2,11 +2,11 @@
 {% block container %}
 <div class="row-fluid">
   <div class="span2">
-    <ul class="nav nav-pills nav-stacked nav-type">
-      <li class="active"><a href="#">已发布</a></li>
-      <li><a href="#">草稿</a></li>
-      <li><a href="#">页面</a></li>
-      <li><a href="#">回收站</a></li>
+    <ul class="nav nav-pills nav-stacked nav-type" data-toggle="query">
+      <li class="active"><a href="publish" data-query="status">已发布</a></li>
+      <li><a href="draft" data-query="status">草稿</a></li>
+      <li><a href="page" data-query="status">页面</a></li>
+      <li><a href="trash" data-query="status">回收站</a></li>
     </ul>
   </div>
   <div class="span10">
@@ -23,12 +23,7 @@
         </ul>
       </div>
       <div class="btn-group pull-right">
-        <button class="btn dropdown-toggle" data-toggle="dropdown">
-          {% if category != 'all' and category != 'none' %}
-            {{api.get_category_by_id(category).name}}
-          {% else %}
-            所有分类 
-          {% end if %} <span class="caret"></span></button>
+        <button class="btn dropdown-toggle" data-toggle="dropdown">所有分类 <span class="caret"></span></button>
         <ul class="dropdown-menu" data-toggle="query">
           {% for c in api.get_categories() %}
           <li><a href="{{c.id}}" data-query="category">{{c.name}}</a></li>
@@ -50,6 +45,9 @@
           <td>
             <a href="/admin/write?id={{article.id}}"><i class="icon-file"></i> {{article.title}}</a>
             <span class="pull-right hide tools-bar">
+              {% if article.status == "draft" or article.status == "trash" %}
+                <a href="/admin/option?id={{article.id}}"><i class="icon-share"></i> 发布</a>
+              {% end if %}
               <a href="/admin/write?id={{article.id}}"><i class="icon-edit"></i> 编辑</a>
               <a href="/admin/delete?id={{article.id}}"><i class="icon-remove"></i> 删除</a>
             </span>
@@ -65,6 +63,6 @@
         {% end for %}
       </tbody>
     </table>
-      </div>
+  </div>
 </div>
 {% end %}

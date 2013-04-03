@@ -3,6 +3,7 @@
 
 import hashlib
 import tornado.web
+from tornado.escape import json_encode
 from datetime import datetime
 from module import * 
 from api import *
@@ -10,7 +11,7 @@ from api import *
 class BaseHandler(tornado.web.RequestHandler):
     def initialize(self, **kargs):
         self.db = get_session()
-        self.api = Api(self.db)
+        self.api = ModuleAPI(self.db)
 
     def get_current_user(self):
         user_id = self.get_secure_cookie("user")
@@ -78,18 +79,17 @@ class LoginHandler(BaseHandler):
 class AdminHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        category = self.get_argument("category", default=None)
-        status = self.get_argument("status", default=None)
-        order_by = self.get_argument("order_by", default=None)
+        category = self.get_argument("category", default="all")
+        status = self.get_argument("status", default="all")
+        order_by = self.get_argument("order_by", default="default")
 
         result = self.db.query(Article)
-        if category:
+        if category != "all":
             c_id = None if category == 'none' else category
-            if category != 'all':
-                result = result.filter(Article.category_id == c_id)
-        if status:
+            result = result.filter(Article.category_id == c_id)
+        if status != "all":
             result = result.filter(Article.status == status)
-        if order_by:
+        if order_by != "default":
             order = {
                 'create': Article.created,
                 'modify': Article.modified,
@@ -97,8 +97,7 @@ class AdminHandler(BaseHandler):
             }
             result = result.order_by(order[order_by])
 
-        articles = result.all()
-        self.render("admin.html", articles=articles, api=self.api, 
+        self.render("admin.html", articles=result.all(), api=self.api, 
             category=category, status=status, order_by=order_by)
 
 class WriteHandler(BaseHandler):
@@ -109,18 +108,20 @@ class WriteHandler(BaseHandler):
             article = self.db.query(Article).get(id)
         else:
             article = None
-        self.render("write.html", article=article)
+        self.render("write.html", article=article, api=self.api)
     
     @tornado.web.authenticated
     def post(self):
         title = self.get_argument("title", default=None)
         content = self.get_argument("content", default=None)
-        id = self.get_argument("id", default=None)
+        id = self.get_argument("id", default=0)
         status = self.get_argument("status", default="publish")
         slug = self.get_argument("slug", default=None)
         category_id = self.get_argument("category", default=None)
+
+        rst = {}
             
-        if id:
+        if id == 0:
             article = self.db.query(Article).get(id)
             article.title = title
             article.content = content
@@ -140,7 +141,9 @@ class WriteHandler(BaseHandler):
             self.db.add(article)
 
         self.db.commit()
-        self.redirect("/admin")
+        rst['status'] = 0
+        rst['article'] = {'id': article.id}
+        self.write(json_encode(rst))
 
 class CategoryHandler(BaseHandler):
     @tornado.web.authenticated
