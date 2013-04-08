@@ -3,8 +3,7 @@
 
 <div class="row-fluid main">
   <div class="span6 title">
-    <h4><a id="title" href="#title-edit" data-toggle="edit-inline">
-    	{% if article %} {{ article.title }} {% else %}标题{% end if%}</a></h4>
+    <h4><a id="title" href="#title-edit" data-toggle="edit-inline">{% if article %}{{ article.title }}{% else %}标题{% end if%}</a></h4>
     <input id="title-edit" class="span10 hide" type="text">
   </div>
   <div class="pull-right btn-toolbar">
@@ -51,11 +50,7 @@
   </div>
 </div>
 <div class="row-fluid">
-  <div class="" id="post-content" style="height:400px;">
-  	{% if article %}
-		{{article.content}}
-	{% end if %}
-  </div>
+	<div class="" id="post-content" style="height:400px;">{% if article %}{{article.content}}{% end if %}</div>
 </div>
 {% if article %} 
 	<input id="id" style="display:none" type="text" value="{{article.id}}" />

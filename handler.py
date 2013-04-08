@@ -91,9 +91,9 @@ class AdminHandler(BaseHandler):
             result = result.filter(Article.status == status)
         if order_by != "default":
             order = {
-                'create': Article.created,
-                'modify': Article.modified,
-                'view': Article.view_count,
+                'create': Article.created.desc(),
+                'modify': Article.modified.desc(),
+                'view': Article.view_count.desc(),
             }
             result = result.order_by(order[order_by])
 
@@ -144,6 +144,23 @@ class WriteHandler(BaseHandler):
         rst['status'] = 0
         rst['article'] = {'id': article.id}
         self.write(json_encode(rst))
+
+class StatusHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        status = self.get_argument("type", default=None)
+        id = self.get_argument("id", default=None)
+
+        if not status or not id:
+            pass
+        
+        article = self.db.query(Article).get(id)
+        article.status = status
+
+        self.db.commit()
+        result = self.db.query(Article)
+        self.render("admin.html", articles=result.all(), api=self.api,
+                   category=None, status=None, order_by=None)
 
 class CategoryHandler(BaseHandler):
     @tornado.web.authenticated

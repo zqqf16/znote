@@ -34,15 +34,6 @@
 		return window.location.pathname + "?" + url.trim('&');
 	}
 
-	var query = '[data-toggle="query"] a';
-	$(document).on('click.query', query, function(e){
-		var $this = $(this)
-		, value = $this.attr("href")
-		, type = $this.attr("data-query");
-		window.location.href = get_query_url(type, value);
-		return false;
-	})
-
 	var edit = '[data-toggle="edit-inline"]';
 	$(document).on('click.edit', edit, function(e){
 		var $this = $(this)
@@ -64,6 +55,7 @@
 				fallback();
 			}
 		})
+		return false;
 	})
 
 	var action = '[data-toggle="action"]';
