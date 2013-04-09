@@ -1,73 +1,28 @@
 {% extends "admin_base.html" %}
 {% block container %}
 <div class="row-fluid">
-  <div id="sidebar-left" class="span1">
-    <div class="nav-collapse sidebar-nav">
-      <ul class="nav nav-tabs nav-stacked main-menu">
-        <li class="active"><a href="index.html"><i class="fa-icon-bar-chart"></i><span class="hidden-tablet"> Dashboard</span></a></li>    
-          <li><a href="infrastructure.html"><i class="fa-icon-hdd"></i><span class="hidden-tablet"> Infrastructure</span></a></li>
-          <li><a href="messages.html"><i class="fa-icon-envelope"></i><span class="hidden-tablet"> Messages</span></a></li>
-          <li><a href="tasks.html"><i class="fa-icon-tasks"></i><span class="hidden-tablet"> Tasks</span></a></li>
-          <li><a href="ui.html"><i class="fa-icon-eye-open"></i><span class="hidden-tablet"> UI Features</span></a></li>
-          <li><a href="widgets.html"><i class="fa-icon-dashboard"></i><span class="hidden-tablet"> Widgets</span></a></li>
-          <li><a href="form.html"><i class="fa-icon-edit"></i><span class="hidden-tablet"> Forms</span></a></li>
-          <li><a href="chart.html"><i class="fa-icon-list-alt"></i><span class="hidden-tablet"> Charts</span></a></li>
-          <li><a href="typography.html"><i class="fa-icon-font"></i><span class="hidden-tablet"> Typography</span></a></li>
-          <li><a href="gallery.html"><i class="fa-icon-picture"></i><span class="hidden-tablet"> Gallery</span></a></li>
-          <li><a href="table.html"><i class="fa-icon-align-justify"></i><span class="hidden-tablet"> Tables</span></a></li>
-          <li><a href="calendar.html"><i class="fa-icon-calendar"></i><span class="hidden-tablet"> Calendar</span></a></li>
-          <li><a href="file-manager.html"><i class="fa-icon-folder-open"></i><span class="hidden-tablet"> File Manager</span></a></li>
-          <li><a href="icon.html"><i class="fa-icon-star"></i><span class="hidden-tablet"> Icons</span></a></li>
-          <li><a href="login.html"><i class="fa-icon-lock"></i><span class="hidden-tablet"> Login Page</span></a></li>
-        </ul>
-      </div>
-  </div>
-  <div id="content" class="span11">
-    <div class="btn-toolbar">
-      <h4 class="span2">文章列表</h4>
-      <div class="btn-group pull-right">
-        <a href="/admin/write" class="btn btn-primary"><i class="icon-pencil icon-white"></i>撰写</a>
-      </div>
-      <div class="btn-group pull-right">
-        <a href="#query" class="btn" data-toggle="modal"><i class="icon-cog"></i>过滤</a>
-      </div>
-    </div>
-    <table class="table table-hover main" data-toggle="tools">
-      <tbody>
-      {% for article in articles %}
-        <tr id="{{article.id}}">
-          <td class="span1 hidden-phone"><span class="badge">{{article.view_count}}</span></td>
-          <td>
-            <a href="/admin/write?id={{article.id}}"><i class="icon-file"></i> {{article.title}}</a>
-            <span class="pull-right hide tools-bar hidden-phone">
-              {% if article.status == "draft" or article.status == "trash" %}
-                <a href="/admin/status?type=publish&id={{article.id}}"><i class="icon-share"></i>发布</a>
-              {% end if %}
-              <a href="/admin/status?type=page&id={{article.id}}"><i class="icon-bookmark"></i>固定</a>
-              <a href="/admin/status?type=trash&id={{article.id}}"><i class="icon-remove"></i>删除</a>
-            </span>
-          </td>
-          <td class="span1 hidden-phone">
-          {% if article.category %}
-            <span class="label label-info">{{article.category.name}}</span></td>
-          {% else %}
-            <span class="label">未分类</span></td>
+  <div class="span6">
+    <h2>所有文章</h2>
+    <ul class="list">
+    {% for article in articles %}
+      <li id="{{article.id}}">
+        <span class="hidden-phone span2 from">
+        {%if article.category %}
+          {{article.category.name}}
+        {%else%}
+          未分类
+        {%end if%}
+        </span>
+        <span class="title span8">
+          {% if article.status == "draft" %}
+            <span class="label label-warning">草稿</span>
           {% end if %}
-          <td class="span1 hidden-phone">
-          {% if article.status == "publish" %}
-            <span class="label label-info">{{article.status}}</span></td>
-          {% elif article.status == "draft" %}
-            <span class="label">{{article.status}}</span></td>
-          {% elif article.status == "trash" %}
-            <span class="label label-warning">{{article.status}}</span></td>
-          {% elif article.status == "page" %}
-            <span class="label label-success">{{article.status}}</span></td>
-          {% end if %}
-          <td class="span2 hidden-phone">{{article.modified.strftime('%b %d %Y')}}</td> 
-        </tr>
-        {% end for %}
-      </tbody>
-    </table>
+          {{article.title}}
+        </span>
+        <span class="hidden-phone span2 date">{{article.modified.strftime('%m/%d/%Y')}}</span> 
+      </li>
+    {% end for %}
+    </ul>
   </div>
 </div>
 

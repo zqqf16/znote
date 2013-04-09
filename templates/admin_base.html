@@ -5,8 +5,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <!--CSS-->
   <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/css/admin_style.css">
+  <link rel="stylesheet" href="/static/css/admin.css">
   <link rel="stylesheet" href="/static/css/bootstrap-responsive.min.css">
+  <link rel="stylesheet" href="/static/css/admin-responsive.css">
   <link rel="shortcut icon" href="/static/image/favicon.png" type="image/png">
   <script src="/static/js/jquery-1.9.1.min.js"></script>
   <script src="/static/js/bootstrap.min.js"></script>
@@ -15,7 +16,7 @@
 <body>
   <header class="navbar navbar-inverse navbar-static-top">
     <div class="navbar-inner">
-        <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".sidebar-nav.nav-collapse">
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
@@ -42,7 +43,19 @@
     </div>
   </header>
   <div class="container-fluid">
-    {% block container %} {% end %}
+    <div class="row-fluid">
+      <div id="sidebar-left" class="span1">
+        <div class="nav-collapse sidebar-nav">
+          <ul class="nav nav-tabs nav-stacked main-menu">
+            <li class="active"><a href="/admin"><span class="hidden-tablet">文章</span></a></li>
+            <li><a href="/admin/pages"><span class="hidden-tablet">页面</span></a></li>
+          </ul>
+        </div>
+      </div>
+      <div id="content" class="span11">
+      {% block container %} {% end %}
+      </div>
+    </div>
   </div>
 </body>
 </html>

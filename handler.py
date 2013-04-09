@@ -162,6 +162,12 @@ class StatusHandler(BaseHandler):
         self.render("admin.html", articles=result.all(), api=self.api,
                    category=None, status=None, order_by=None)
 
+class PageHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        pages = self.db.query(Article).filter(Article.status=="page").all()
+        self.render("admin_page.html", pages=pages, api=self.api)
+
 class CategoryHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
