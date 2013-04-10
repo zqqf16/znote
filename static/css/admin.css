@@ -6,6 +6,14 @@ body {
 	font-weight: 400;
 }
 
+.box-left {
+	border-left: 2px solid #EEE;
+}
+
+.noMarginLeft {
+	margin-left: 0px !important;
+}
+
 h1 {
 	font-size: 32px;
 	line-height: 32px;

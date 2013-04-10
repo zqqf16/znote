@@ -2,19 +2,26 @@
 {% block container %}
 
 <div class="row-fluid">
-  	<input class="input-xlarge" type="text" placeholder="标题"/>
-  	<div id="post-content">{% if article %}{{article.content}}{% end if %}</div>
-	<select class="span3">
-      <option>1</option>
-      <option>2</option>
-      <option>3</option>
-      <option>4</option>
-      <option>5</option>
-    </select>
+	<h1>无标题</h1>
+</div>
+<div class="row-fluid">
+  	<div id="post-content" class="span8">{% if article %}{{article.content}}{% end if %}</div>
+	<div class="span4 box-left noMarginLeft">
+	<select id="category">
+      <option value="none">未分类</option>
+	  {% for ctg in api.get_categories() %}
+	  <option value={{ ctg.id }}>{{ ctg.name }}</option>
+	  {% end for %}
+	  {% if article and article.category %}
+	  <script> document.getElementbyId("category").value={{ article.category.id }}
+	  {% end if %}
+	</select>
+	<a class="help-inline" href="#">添加分类</a>
 	<div class="form-actions">
-      <button type="submit" class="btn btn-primary">Save changes</button>
-	  <button type="reset" class="btn">Cancel</button>
+      <button type="submit" class="btn btn-primary">保存</button>
+	  <a href="javascript:history.go(-1)" class="btn">取消</a>
 	</div>
+</div>
 </div>
 <script src="/static/js/ace/ace.js"></script>
 <script type="text/javascript">
