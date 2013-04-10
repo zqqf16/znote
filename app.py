@@ -20,7 +20,7 @@ class App(tornado.web.Application):
             (r'/login', LoginHandler),
             (r'/admin', AdminHandler),
             (r'/admin/write', WriteHandler),
-            (r'/admin/status', StatusHandler),
+            (r'/admin/article', ArticleHandler),
             (r'/admin/pages', PageHandler),
             (r'/article/([0-9]+).html', SingleHandler),
             (r'/([0-9a-zA-Z_-]+)', PageHandler),

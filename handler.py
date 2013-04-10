@@ -145,22 +145,27 @@ class WriteHandler(BaseHandler):
         rst['article'] = {'id': article.id}
         self.write(json_encode(rst))
 
-class StatusHandler(BaseHandler):
+class ArticleHandler(BaseHandler):
     @tornado.web.authenticated
-    def get(self):
-        status = self.get_argument("type", default=None)
-        id = self.get_argument("id", default=None)
+    def post(self):
+        action = self.get_argument("action", default=None)
+        article_id = self.get_argument("id", default=None)
+        if not action or not article_id \
+                or action not in ("delete", "publish", "draft"):
+            self.write(json_encode({"status": 1, "msg": "error"}))
+            return
 
-        if not status or not id:
-            pass
-        
-        article = self.db.query(Article).get(id)
-        article.status = status
+        article = self.db.query(Article).get(article_id)
+        if not article:
+            self.write(json_encode({"status": 2, "msg": "not found"}))
+
+        if action == "publish" or action == "draft":
+            article.status = action
+        elif action == "delete":
+            self.db.delete(article)
 
         self.db.commit()
-        result = self.db.query(Article)
-        self.render("admin.html", articles=result.all(), api=self.api,
-                   category=None, status=None, order_by=None)
+        self.write(json_encode({"status": 0}))
 
 class PageHandler(BaseHandler):
     @tornado.web.authenticated
@@ -177,6 +182,50 @@ class CategoryHandler(BaseHandler):
     def post(self):
         action = self.get_argument("action", default=None)
         name = self.get_argument("name", default=None)
-        id = self.get_argument("id", default=None)
+        cid = self.get_argument("id", default=None)
 
+        if action not in ("add", "edit", "delete"):
+            self.write(json_encode({"status": 1, "msg": "error"}))
+            return
 
+        if action == "add":
+            if not name:
+                self.write(json_encode({"status": 1, "msg": "error"}))
+                return
+            ctg = self.db.query(Category).filter(Category.name == name)
+            if ctg:
+                self.write(json_encode({"status": 2, "msg": "already exist"}))
+                return
+            else:
+                ctg = Category(name=name)
+                self.db.add(ctg)
+                self.db.commit()
+                self.write(json_encode({"status": 0, "category": ctg.id}))
+                return
+        elif action == "edit":
+            if not name or not cid:
+                self.write(json_encode({"status": 1, "msg": "error"}))
+                return
+            ctg = self.db.query(Category).get(cid)
+            if not ctg:
+                self.write(json_encode({"status": 3, "msg": "not found"}))
+                return
+            
+            ctg.name = name
+            self.db.commit()
+            self.write(json_encode({"status": 1}))
+            return
+
+        elif action == "delete":
+            if not cid:
+                self.write(json_encode({"status": 1, "msg": "error"}))
+            
+            ctg = self.db.query(Category).get(cid)
+            if not ctg:
+                self.write(json_encode({"status": 3, "msg": "not found"}))
+                return
+            
+            self.db.delete(ctg)
+            self.db.commit()
+            self.write(json_encode({"status": 1}))
+            return
