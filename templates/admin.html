@@ -2,17 +2,18 @@
 {% block container %}
 <div class="row-fluid">
   <h1 class="span6">所有文章</h1>
-  <div class="pull-right action-btn">
-    <a href="#" id="status-delete">过滤</a>
-    <a href="#" id="status-delete">删除</a>
-    <a href="#" id="status-publish">发布</a>
-    <a href="#" id="status-draft">草稿</a>
+  <div class="pull-right action-btn" id="btn-bar" action-type="btn" >
+	<a href="#" class="hide" visible-status="publish" id="status-delete">固定</a>
+    <a href="#" class="hide red" visible-status="all" id="status-delete">删除</a>
+    <a href="#" class="hide green" visible-status="draft" id="status-publish">发布</a>
+    <a href="#" class="hide yellow" visible-status="publish" id="status-draft">草稿</a>
+	<a href="#" class="blue" visible-status="all" id="status-delete">过滤</a>
   </div>
 </div>
   <div class="row-fluid">
     <ul class="list">
     {% for article in articles %}
-      <li id="{{article.id}}">
+	  <li action-type="list" list-index="{{article.id}}" list-status="{{article.status}}" event-target="#btn-bar">
         <span class="hidden-phone span2 from">
         {%if article.category %}
           {{article.category.name}}
