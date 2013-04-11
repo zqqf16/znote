@@ -112,6 +112,8 @@ class WriteHandler(BaseHandler):
     
     @tornado.web.authenticated
     def post(self):
+        self.set_header('Content-Type', 'application/json; charset=UTF-8')
+        
         title = self.get_argument("title", default=None)
         content = self.get_argument("content", default=None)
         id = self.get_argument("id", default=0)
@@ -121,7 +123,7 @@ class WriteHandler(BaseHandler):
 
         rst = {}
             
-        if id == 0:
+        if id != 0:
             article = self.db.query(Article).get(id)
             article.title = title
             article.content = content

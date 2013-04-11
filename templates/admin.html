@@ -1,8 +1,15 @@
 {% extends "admin_base.html" %}
 {% block container %}
 <div class="row-fluid">
-  <div class="span6">
-    <h1>所有文章</h1>
+  <h1 class="span6">所有文章</h1>
+  <div class="pull-right action-btn">
+    <a href="#" id="status-delete">过滤</a>
+    <a href="#" id="status-delete">删除</a>
+    <a href="#" id="status-publish">发布</a>
+    <a href="#" id="status-draft">草稿</a>
+  </div>
+</div>
+  <div class="row-fluid">
     <ul class="list">
     {% for article in articles %}
       <li id="{{article.id}}">
@@ -24,7 +31,6 @@
     {% end for %}
     </ul>
   </div>
-</div>
 
 <div id="query" class="modal hide" tabindex="-1" role="dialog" data-backdrop="false">
   <div class="modal-header">
