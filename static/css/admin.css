@@ -43,7 +43,6 @@ body {
 .action-btn {
 	margin-bottom: 1px;
 	display: inline-block;
-	font-size: 12px;
 	margin-top: 20px;
 }
 .action-btn a {
@@ -77,6 +76,10 @@ body {
 	margin-left: 0px !important;
 }
 
+.head .icon-cog {
+	vertical-align: baseline;
+}
+
 input.title:focus,
 input.title {
 	font-size: 32px;
@@ -87,6 +90,9 @@ input.title {
 	box-shadow: none;
 	border-color: none;
 	outline: none;
+	webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
 }
 input.title::-webkit-input-placeholder {
 	line-height: 32px;
@@ -141,7 +147,6 @@ h6 {
 	border-right: none;
 	padding-bottom: 1px;
 	text-align: center !important;
-	font-size: 10px;
 }
 
 .sidebar-nav > ul > li > ul {
@@ -300,8 +305,6 @@ h6 {
 ul.list {
 	list-style: none;
 	margin: 0px;
-	font-size: 12px;
-	
 }
 
 ul.list li {

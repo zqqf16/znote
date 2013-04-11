@@ -2,11 +2,11 @@
 {% block container %}
 <div class="row-fluid">
   <div class="span6">
-    <h2>所有页面</h2>
+    <h1>所有页面</h1>
     <ul class="list">
     {% for page in pages %}
       <li id="{{page.id}}">
-        <span class="title span8">
+        <span class="title span10">
           {{page.title}}
         </span>
         <span class="hidden-phone span2 date">{{page.modified.strftime('%m/%d/%Y')}}</span> 

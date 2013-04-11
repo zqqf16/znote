@@ -53,10 +53,10 @@
 		, $id = $("#id");
 	{% if article %}
 		{% if article.category %}
-		$ctg.data("val") = {{article.category.id}};
+		$ctg.data("val", "{{article.category.id}}");
 		{% end if %}
 		{% if article.slug %}
-		$url.data("val") = {{article.slug}}
+		$url.data("val", "{{article.slug}}");
 		{% end if %}
 		{% if article.id %}
 		$id.val("{{article.id}}");

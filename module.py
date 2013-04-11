@@ -5,9 +5,8 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy import Column, Integer, String, DateTime, Text, Enum
-from sqlalchemy import ForeignKey, Table  
+from sqlalchemy import ForeignKey, Table, or_  
 from sqlalchemy.orm import relationship, backref
-from sqlalchemy.orm import defer, undefer
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
