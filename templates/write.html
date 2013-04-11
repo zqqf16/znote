@@ -2,26 +2,14 @@
 {% block container %}
 
 <div class="row-fluid">
-	<h1>无标题</h1>
-</div>
-<div class="row-fluid">
-  	<div id="post-content" class="span8">{% if article %}{{article.content}}{% end if %}</div>
-	<div class="span4 box-left noMarginLeft">
-	<select id="category">
-      <option value="none">未分类</option>
-	  {% for ctg in api.get_categories() %}
-	  <option value={{ ctg.id }}>{{ ctg.name }}</option>
-	  {% end for %}
-	  {% if article and article.category %}
-	  <script> document.getElementbyId("category").value={{ article.category.id }}
-	  {% end if %}
-	</select>
-	<a class="help-inline" href="#">添加分类</a>
-	<div class="form-actions">
-      <button type="submit" class="btn btn-primary">保存</button>
-	  <a href="javascript:history.go(-1)" class="btn">取消</a>
+	<input type="text" class="title input-xxlarge" placeholder="无标题"/>
+	<div class="pull-right">
+		<span class="buttons"><a href="#" >保存</a></span>
+		<span class="buttons"><a href="#"> 发布</a></span>
 	</div>
 </div>
+<div class="row-fluid">
+  	<div id="post-content" class="span12">{% if article %}{{article.content}}{% end if %}</div>
 </div>
 <script src="/static/js/ace/ace.js"></script>
 <script type="text/javascript">
@@ -30,7 +18,7 @@
 		editor.setTheme("ace/theme/textmate");
 		editor.getSession().setMode("ace/mode/markdown");
 		editor.getSession().setUseWrapMode(true);
-		editor.renderer.setShowGutter(true);
+		editor.renderer.setShowGutter(false);
 		editor.setShowPrintMargin(false);
 		editor.setFontSize(16);
 		window.editor = editor;
