@@ -5,8 +5,8 @@
 	<input type="text" id="title" class="title input-xxlarge" autocomplete="off" placeholder="输入标题" {% if article %}value="{{article.title}}"{% end if %}/>
 	<div class="pull-right action-btn">
 		<a href="#" data-toggle="modal" data-target="#option" data-keyboard="false" data-backdrop="false">属性</a>
-		<a href="#" id="save-draft">保存</a>
-		<a href="#" id="save-publish">发布</a>
+		<a href="#" action-type="event" event-type="znote.write.draft">保存</a>
+		<a href="#" action-type="event" event-type="znote.write.publish">发布</a>
 	</div>
 </div>
 <div class="row-fluid">
@@ -46,12 +46,20 @@
 </div>
 <script src="/static/js/ace/ace.js"></script>
 <script type="text/javascript">
-	!function(){
+	$(document).ready(function(){
+		var editor = ace.edit("post-content");
+		editor.setTheme("ace/theme/textmate");
+		editor.getSession().setMode("ace/mode/markdown");
+		editor.getSession().setUseWrapMode(true);
+		editor.renderer.setShowGutter(false);
+		editor.setShowPrintMargin(false);
+		editor.setFontSize(16);
+		window.editor = editor;
+
 		var $ctg = $("#category")
 		, $url = $("#url")
 		, $option = $("#option")
 		, $id = $("#id");
-
 		$option.on("show", function() {
 			$ctg.val($ctg.data("val"));
 			$url.val($url.data("val"));
@@ -62,48 +70,11 @@
 			$url.data("val", $url.val());
 			$option.modal("hide");
 		});
-
-	{% if article %}
-		{% if article.category %}$ctg.data("val", "{{article.category.id}}"); {% end if %}
-		{% if article.slug %} $url.data("val", "{{article.slug}}"); {% end if %}
-		{% if article.id %} $id.val("{{article.id}}"); {% end if %}
-	{% end if %}
-
-		var save = function(type){
-			$.post("/admin/write", 
-					{"title": $("#title").val(),   "content": window.editor.getValue(),
-					 "category": $ctg.data("val"), "slug": $url.data("val"),
-					 "id": $id.val(),              "status": type,
-					},
-					function(e) {
-						if (e.status == 0) {
-							$id.val(e.article.id);
-						} else {
-							alert(e.msg);
-						}
-					}
-			);
-		};
-
-		$("#save-publish").on("click", function(e){
-			save("publish");
-		})
-
-		$("#save-draft").on("click", function(e){
-			save("draft");
-		})
-
-	}()
-
-	$(document).ready(function(){
-		var editor = ace.edit("post-content");
-		editor.setTheme("ace/theme/textmate");
-		editor.getSession().setMode("ace/mode/markdown");
-		editor.getSession().setUseWrapMode(true);
-		editor.renderer.setShowGutter(false);
-		editor.setShowPrintMargin(false);
-		editor.setFontSize(16);
-		window.editor = editor;
+		{% if article %}
+			{% if article.category %}$ctg.data("val", "{{article.category.id}}"); {% end if %}
+			{% if article.slug %} $url.data("val", "{{article.slug}}"); {% end if %}
+			{% if article.id %} $id.val("{{article.id}}"); {% end if %}
+		{% end if %}
 	});
 </script>
 {% end %}

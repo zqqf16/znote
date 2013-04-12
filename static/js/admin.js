@@ -59,3 +59,41 @@
 	});
 
 }(window.jQuery)
+!function($) {
+	$doc = $(document);
+
+	var action_event = '[action-type="event"]';
+
+	$doc.on("click.event", action_event, function(){
+		var type = $(this).attr("event-type");
+		$doc.trigger(type);
+	});
+
+	var save = function(type) {
+		var $ctg = $("#category")
+		, $url = $("#url")
+		, $id = $("#id");
+
+		$.post("/admin/write", 
+				{"title": $("#title").val(),   "content": window.editor.getValue(),
+				 "category": $ctg.data("val"), "slug": $url.data("val"),
+				 "id": $id.val(),              "status": type,
+				},
+				function(e) {
+					if (e.status == 0) {
+						$id.val(e.article.id);
+					} else {
+						alert(e.msg);
+					}
+				}
+		);
+	};
+
+	$doc.on('znote.write.publish', function(e) {
+		save("publish");
+	});
+	$doc.on('znote.write.draft', function(e) {
+		save("draft");
+	});
+
+}(window.jQuery)

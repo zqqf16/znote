@@ -3,12 +3,13 @@
 <div class="row-fluid">
 	<h1 class="span6">所有文章 <a href="#query" data-toggle="modal" class="head"><i class="icon-cog"></i></a></h1>
   <div class="pull-right action-btn" id="btn-bar" action-type="btn" >
-	<a href="#" class="hide" visible-status="publish" id="btn-fix">固定</a>
-	<a href="#" class="hide" visible-status="page" id="btn-unfix">取消固定</a>
+	<a href="#" class="hide" visible-status="publish" id="btn-fix">置顶</a>
+	<a href="#" class="hide" visible-status="page" id="btn-unfix">取消置顶</a>
     <a href="#" class="hide red" visible-status="all" id="btn-delete">删除</a>
     <a href="#" class="hide green" visible-status="draft" id="btn-publish">发布</a>
     <a href="#" class="hide yellow" visible-status="publish" id="btn-draft">草稿</a>
-	<a href="#" class="blue" visible-status="all" id="btn-edit">编辑</a>
+	<a href="#" class="hide purple" visible-status="all" id="btn-edit">编辑</a>
+	<a href="#" class="blue" visible-status="all" id="btn-edit">撰写</a>
   </div>
 </div>
   <div class="row-fluid">
@@ -26,7 +27,7 @@
           {% if article.status == "draft" %}
             <span class="label label-warning">草稿</span>
 		  {% elif article.status == "page" %}
-			<span class="label label-success">固定</span>
+			<span class="label label-success">置顶</span>
           {% end if %}
           {{article.title}}
         </span>

@@ -47,12 +47,16 @@ body {
 }
 .action-btn a {
 	padding: 2px 10px;
-	background: #1ABC9C;
+	background: #16A085;
 	color: #fff;
 	margin-left: 2px;
 }
 .action-btn a.blue {
 	background: #2383C4;
+	color: #fff;
+}
+.action-btn a.purple {
+	background: #9B59B6;
 	color: #fff;
 }
 .action-btn a.red {

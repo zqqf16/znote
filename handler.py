@@ -172,12 +172,6 @@ class ArticleHandler(BaseHandler):
         self.db.commit()
         self.write(json_encode({"status": 0}))
 
-class PageHandler(BaseHandler):
-    @tornado.web.authenticated
-    def get(self):
-        pages = self.db.query(Article).filter(Article.status=="page").all()
-        self.render("admin_page.html", pages=pages, api=self.api)
-
 class CategoryHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
