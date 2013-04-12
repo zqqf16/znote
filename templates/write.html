@@ -5,8 +5,12 @@
 	<input type="text" id="title" class="title input-xxlarge" autocomplete="off" placeholder="输入标题" {% if article %}value="{{article.title}}"{% end if %}/>
 	<div class="pull-right action-btn">
 		<a href="#" data-toggle="modal" data-target="#option" data-keyboard="false" data-backdrop="false">属性</a>
+		{% if article and article.status == 'page' %}
+		<a href="#" action-type="event" event-type="znote.write.page">保存</a>
+		{% else %}
 		<a href="#" action-type="event" event-type="znote.write.draft">保存</a>
 		<a href="#" action-type="event" event-type="znote.write.publish">发布</a>
+		{% end if %}
 	</div>
 </div>
 <div class="row-fluid">

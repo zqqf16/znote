@@ -59,6 +59,7 @@
 	});
 
 }(window.jQuery)
+
 !function($) {
 	$doc = $(document);
 
@@ -94,6 +95,9 @@
 	});
 	$doc.on('znote.write.draft', function(e) {
 		save("draft");
+	});
+	$doc.on('znote.write.page', function(e) {
+		save("page");
 	});
 
 }(window.jQuery)
