@@ -83,7 +83,7 @@ class AdminHandler(BaseHandler):
         status = self.get_argument("status", default="all")
         order_by = self.get_argument("order_by", default="default")
 
-        result = self.db.query(Article).filter(or_(Article.status == 'publish', Article.status == 'draft'))
+        result = self.db.query(Article)
         if category != "all":
             c_id = None if category == 'none' else category
             result = result.filter(Article.category_id == c_id)

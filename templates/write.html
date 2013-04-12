@@ -4,7 +4,7 @@
 <div class="row-fluid">
 	<input type="text" id="title" class="title input-xxlarge" autocomplete="off" placeholder="输入标题" {% if article %}value="{{article.title}}"{% end if %}/>
 	<div class="pull-right action-btn">
-		<a href="#" id="open-option">属性</a>
+		<a href="#" data-toggle="modal" data-target="#option" data-keyboard="false" data-backdrop="false">属性</a>
 		<a href="#" id="save-draft">保存</a>
 		<a href="#" id="save-publish">发布</a>
 	</div>
@@ -40,44 +40,34 @@
 	</div>
   </div>
   <div class="modal-footer">
-	  <a href="#" class="btn option-cancel">取消</a>
-	  <a href="#" class="btn btn-primary option-save">保存</a>
+	  <a href="#" class="btn" data-dismiss="modal">取消</a>
+	  <a href="#" class="btn btn-primary" id="option-save">保存</a>
   </div>
 </div>
 <script src="/static/js/ace/ace.js"></script>
 <script type="text/javascript">
 	!function(){
 		var $ctg = $("#category")
-		, $url = $("#rul")
+		, $url = $("#url")
 		, $option = $("#option")
 		, $id = $("#id");
-	{% if article %}
-		{% if article.category %}
-		$ctg.data("val", "{{article.category.id}}");
-		{% end if %}
-		{% if article.slug %}
-		$url.data("val", "{{article.slug}}");
-		{% end if %}
-		{% if article.id %}
-		$id.val("{{article.id}}");
-		{% end if %}
-	{% end if %}
 
-		$("#open-option").on("click.open", function(e) {
+		$option.on("show", function() {
 			$ctg.val($ctg.data("val"));
 			$url.val($url.data("val"));
-			$option.modal("show");
 		});
 
-		$option.on("click.save", ".option-save", function(e){
+		$option.on("click", "#option-save", function(e){
 			$ctg.data("val", $ctg.val());
 			$url.data("val", $url.val());
 			$option.modal("hide");
 		});
 
-		$option.on("click.save", ".option-cancel", function(e){
-			$option.modal("hide");
-		});
+	{% if article %}
+		{% if article.category %}$ctg.data("val", "{{article.category.id}}"); {% end if %}
+		{% if article.slug %} $url.data("val", "{{article.slug}}"); {% end if %}
+		{% if article.id %} $id.val("{{article.id}}"); {% end if %}
+	{% end if %}
 
 		var save = function(type){
 			$.post("/admin/write", 
