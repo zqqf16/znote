@@ -31,7 +31,31 @@
 
 	var btn = '[action-type="btn"] a';
 	$(document).on('click.btn', btn, function(e) {
-		var $this = $(this);
+		var $this = $(this)
+		, id = $this.attr("id")
+		, if_status = false;
+		
+		switch(id) {
+			case "status-publish": if_status="publish"; break;
+			case "status-draft": if_status="draft"; break;
+			case "status-delete": if_status="delete"; break;
+			case "status-fix": if_status="fix"; break;
+			case "status-edit": 
+				window.location.href="/admin/write?id="+$this.data("article-id");
+				break;
+		}
+		if (if_status) {
+			$.post('/admin/article',
+					{"action": if_status, "id": $this.data("article-id")},
+					function(e) {
+						if (e.status == 0) {
+							window.location.reload();
+						} else {
+							alert(e.msg);
+						}
+					}
+			);
+		}
 	});
 
 }(window.jQuery)

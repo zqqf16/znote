@@ -52,7 +52,7 @@ class Article(Base):
     category_id = Column(Integer, ForeignKey('categories.id'))
     title = Column(String(128), nullable=False)
     content = Column(Text, nullable=False)
-    status = Column(Enum('publish','draft','page','trash'), default='publish')
+    status = Column(Enum('publish','draft','page'), default='publish')
     slug = Column(String(128), default=None)
     view_count = Column(Integer, default=0)
     #relationship

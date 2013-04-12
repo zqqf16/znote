@@ -150,10 +150,11 @@ class WriteHandler(BaseHandler):
 class ArticleHandler(BaseHandler):
     @tornado.web.authenticated
     def post(self):
+        self.set_header('Content-Type', 'application/json; charset=UTF-8')
         action = self.get_argument("action", default=None)
         article_id = self.get_argument("id", default=None)
         if not action or not article_id \
-                or action not in ("delete", "publish", "draft"):
+                or action not in ("delete", "publish", "draft", "fix"):
             self.write(json_encode({"status": 1, "msg": "error"}))
             return
 
@@ -163,6 +164,8 @@ class ArticleHandler(BaseHandler):
 
         if action == "publish" or action == "draft":
             article.status = action
+        elif action == "fix":
+            article.status = "page"
         elif action == "delete":
             self.db.delete(article)
 
