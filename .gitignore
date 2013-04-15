@@ -1,0 +1,12 @@
+*.py[cod]
+
+# session
+sessions/*
+
+#znote db
+zn.db
+
+#vim
+*.swp
+
+!.gitignore

@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+<head>
+	<title>Znote</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!--CSS-->
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/admin_style.css">
+	<link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+	<link rel="shortcut icon" href="image/favicon.png" type="image/png">
+	<script src="js/jquery-1.9.1.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+  <script src="js/admin.js"></script>
+</head>
+<body>
+	<header class="navbar navbar-inverse navbar-static-top">
+    <div class="navbar-inner">
+      <div class="container">
+         <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="brand" href="#">Znote</a>
+         <div class="nav-collapse collapse">
+          <ul class="nav">
+            <li class="active"><a href="#">文章</a></li>
+            <li><a href="#">分类</a></li>
+            <li><a href="#">评论</a></li>
+          </ul>
+          <ul class="nav pull-right">
+				    <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Zorro<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">账户信息</a></li>
+		            <li><a href="#">系统设置</a></li>
+                <li class="divider"></li>
+                <li><a href="#">退出</a></li>
+              </ul>
+				    </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+  </header>
+    <div class="container-fluid">
+		  <div class="row-fluid">
+        <div class="span2">
+          <ul class="nav nav-pills nav-stacked nav-type">
+            <li class="active"><a href="#">已发布</a></li>
+            <li><a href="#">草稿</a></li>
+            <li><a href="#">页面</a></li>
+            <li><a href="#">回收站</a></li>
+          </ul>
+        </div>
+        <div class="span10">
+          <div class="btn-toolbar">
+            <div class="btn-group">
+              <a href="#" class="btn btn-primary"><i class="icon-pencil icon-white"></i>撰写</a>
+            </div>
+            <div class="btn-group pull-right">
+              <button class="btn dropdown-toggle" data-toggle="dropdown">排序方式 <span class="caret"></span></button>
+              <ul class="dropdown-menu">
+                <li><a href="#">最后发布</a></li>
+                <li><a href="#">最后修改</a></li>
+                <li><a href="#">最多访问</a></li>
+              </ul>
+            </div>
+            <div class="btn-group pull-right">
+              <button class="btn dropdown-toggle" data-toggle="dropdown">所有分类 <span class="caret"></span></button>
+              <ul class="dropdown-menu">
+                <li><a href="#">分类一</a></li>
+                <li><a href="#">分类二</a></li>
+                <li><a href="#">分类三</a></li>
+                <li class="divider"></li>
+                <li><a href="#">未分类</a></li>
+              </ul>
+            </div>
+          </div>
+          <table class="table table-hover main" data-toggle="tools">
+            <tbody>
+              <tr> 
+                <td class="span1"><span class="badge">10</span></td>
+                <td>
+                  <a href="#"><i class="icon-file"></i> Hello 世界</a>
+                  <span class="pull-right hide tools-bar">
+                    <a href="#"><i class="icon-edit"></i> 编辑</a>
+                    <a href="#"><i class="icon-remove"></i> 删除</a>
+                  </span>
+                </td>
+                <td class="span1"><span class="label label-info">生活</span></td>
+                <td class="span2">2013-3-13</td> 
+              </tr>
+              <tr> 
+                <td class="span1"><span class="badge">2</span></td>
+                <td><a href="#"><i class="icon-bookmark"></i> Hello 世界</a>
+                  <span class="pull-right hide tools-bar">
+                    <a href="#"><i class="icon-edit"></i> 编辑</a>
+                    <a href="#"><i class="icon-remove"></i> 删除</a>
+                  </span>
+                </td>
+                <td class="sapn2"><span class="label label-info">技术</span></td>
+                <td class="span2">2013-3-13</td> 
+              </tr>
+            </tbody>
+          </table>
+		    </div>
+      </div>
+    </div>
+</body>
+</html>

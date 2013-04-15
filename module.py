@@ -5,20 +5,27 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy import Column, Integer, String, DateTime, Text, Enum
-from sqlalchemy import ForeignKey, Table  
+from sqlalchemy import ForeignKey, Table, or_  
 from sqlalchemy.orm import relationship, backref
-from sqlalchemy.orm import defer, undefer
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
 #Time
 from datetime import datetime
 #Markdown2
 import markdown2
 
-import db
-
 #--------------------------------
 # Database
 #--------------------------------
 Base = declarative_base()
+engine = create_engine('sqlite:///zn.db', echo=False)
+
+def init_db():
+    Base.metadata.create_all(engine)
+
+def get_session():
+    return sessionmaker(bind=engine)()
 
 #--------------------------------
 # Tables
@@ -28,17 +35,12 @@ class User(Base):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
-    username = Column(String(64)) 
+    username = Column(String(64), nullable=False) 
     nickname = Column(String(64))
-    password = Column(String(128))
-    salt = Column(String(128)) 
+    password = Column(String(128), nullable=False)
+    salt = Column(String(128), nullable=False) 
     email = Column(String(128))
     last_ip = Column(String(128)) 
-
-article_category = Table('relationships', Base.metadata, 
-                         Column('article_id', Integer, ForeignKey('articles.id')), 
-                         Column('category_id', Integer, ForeignKey('categories.id'))
-                        )
 
 #articles
 class Article(Base):
@@ -47,18 +49,15 @@ class Article(Base):
     created = Column(DateTime, default=datetime.now)
     modified = Column(DateTime, default=datetime.now)
     author_id = Column(Integer, ForeignKey('users.id'))
+    category_id = Column(Integer, ForeignKey('categories.id'))
     title = Column(String(128), nullable=False)
     content = Column(Text, nullable=False)
-    status = Column(Enum('published','draft'), default='published')
+    status = Column(Enum('publish','draft','page'), default='publish')
     slug = Column(String(128), default=None)
     view_count = Column(Integer, default=0)
     #relationship
     author = relationship('User', backref=backref('articles', lazy='dynamic'))
-    categories = relationship('Category', 
-                            secondary=article_category, 
-                            passive_deletes=True, 
-                            backref=backref('articles', lazy='dynamic')
-                           )
+    category = relationship('Category', backref=backref('articles', lazy='dynamic'))
 
     @hybrid_property
     def markdown(self):
@@ -80,19 +79,19 @@ class Config(Base):
 if __name__ == '__main__':
     import hashlib
 
-    db.init_db(Base)
-    session = db.get_session()
+    init_db()
+    session = get_session()
 
     #Don't forget to change it!
     username = 'zqqf16'
     pwd = hashlib.md5('123456').hexdigest()
     salt = hashlib.md5(datetime.now().ctime()).hexdigest()
     pwd = hashlib.md5(pwd+salt).hexdigest()
-    user = User(username=username, password=pwd, nickname="Zorro", email='zqqf16@gmail.com')
+    user = User(username=username, password=pwd, salt=salt, nickname="Zorro", email='zqqf16@gmail.com')
     session.add(user)
 
     article = Article(title=u'Hello World', content=u'这是一篇默认文章', author=user)
     catg = Category(name=u'测试')
-    article.categories.append(catg)
+    article.category = catg
     session.add(article)
     session.commit()
