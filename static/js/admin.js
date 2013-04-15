@@ -1,6 +1,7 @@
 !function ($) {
+	$doc = $(document);
 	var list = '[action-type="list"]';
-	$(document).on('click.list', list, function(e) {
+	$doc.on('click.list', list, function(e) {
 		var $this = $(this)
 		, target = $this.attr("event-target");
 		$this.parent().find(".active").removeClass("active");
@@ -8,7 +9,7 @@
 		$(target).find("a").trigger('status-toggle', [$this.attr("list-status"), $this.attr("list-index")]);
 	});
 
-	$(document).on('dblclick.list', list, function(e) {
+	$doc.on('dblclick.list', list, function(e) {
 		var $this = $(this)
 		, index = $this.attr("list-index")
 		, url = "/admin/write?id=" + index;
@@ -17,7 +18,7 @@
 	});
 
 	var btn = '[action-type="btn"] a';
-	$(document).on('status-toggle', btn, function(e, status, id) {
+	$doc.on('status-toggle', btn, function(e, status, id) {
 		var $this = $(this)
 		, visible = $this.attr("visible-status") ;
 
@@ -29,7 +30,7 @@
 		}
 	});
 
-	$(document).on('click.btn', btn, function(e) {
+	$doc.on('click.btn', btn, function(e) {
 		var $this = $(this)
 		, id = $this.attr("id")
 		, if_status = false;
@@ -51,7 +52,7 @@
 						if (e.status == 0) {
 							window.location.reload();
 						} else {
-							alert(e.msg);
+							$doc.trigger("znote.alert", ['error', e.msg]);
 						}
 					}
 			);
@@ -83,8 +84,9 @@
 				function(e) {
 					if (e.status == 0) {
 						$id.val(e.article.id);
+						$doc.trigger("znote.alert", ['success', '操作成功']);
 					} else {
-						alert(e.msg);
+						$doc.trigger("znote.alert", ['error', e.msg]);
 					}
 				}
 		);
@@ -98,6 +100,20 @@
 	});
 	$doc.on('znote.write.page', function(e) {
 		save("page");
+	});
+
+}(window.jQuery)
+
+!function($) {
+	var get_alert = function(e, type, msg) {
+		return '<div id="alert" class="alert alert-' + type
+		   + ' span8 offset2"><a class="close" data-dismiss="alert">×</a>' 
+		   + msg + '</div>';
+	}
+
+	$(document).on('znote.alert', function(type, title, msg){
+		var $info = $("#info-bar");
+		$info.html(get_alert(type, title, msg));
 	});
 
 }(window.jQuery)

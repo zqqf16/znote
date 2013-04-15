@@ -122,7 +122,7 @@ class WriteHandler(BaseHandler):
             self.write(u'''{"status": 1, "msg": "标题或者内容不能为空"}''')
             return
 
-        if status not in ('publish', 'draft'):
+        if status not in ('publish', 'draft', 'page'):
             self.write(u'''{"status": 1, "msg": "违法的状态"}''')
             return
 
