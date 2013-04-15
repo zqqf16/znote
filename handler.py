@@ -33,8 +33,8 @@ class IndexHandler(BaseHandler):
         self.render('index.html', articles=articles, api=self.api)
 
 class SingleHandler(BaseHandler):
-    def get(self, article_id):
-        article = self.db.query(Article).get(article_id)
+    def get(self, aid):
+        article = self.db.query(Article).get(aid)
         if not article: 
             raise tornado.web.HTTPError(404)
         article.view_count += 1
@@ -42,11 +42,18 @@ class SingleHandler(BaseHandler):
         self.render('single.html', article=article, api=self.api)
 
 class PageHandler(BaseHandler):
-    def get(self, article_slug):
-        article = self.db.query(Article).filter(Article.slug==article_slug).first()
+    def get(self, aid):
+        article = self.db.query(Article).get(aid)
         if not article: 
             raise tornado.web.HTTPError(404)
         self.render('page.html', article=article, api=self.api)
+
+class SlugHandler(BaseHandler):
+    def get(self, slug):
+        article = self.db.query(Article).filter(Article.slug==slug).first()
+        if not article: 
+            raise tornado.web.HTTPError(404)
+        self.render('single.html', article=article, api=self.api)
 
 
 class LoginHandler(BaseHandler):

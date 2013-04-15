@@ -22,7 +22,8 @@ class App(tornado.web.Application):
             (r'/admin/write', WriteHandler),
             (r'/admin/article', ArticleHandler),
             (r'/article/([0-9]+).html', SingleHandler),
-            (r'/([0-9a-zA-Z_-]+)', PageHandler),
+            (r'/page/([0-9]+).html', PageHandler),
+            (r'/([0-9a-zA-Z_-]+)', SlugHandler),
             (r'.*', PageNotFoundHandler),
         ]
 
