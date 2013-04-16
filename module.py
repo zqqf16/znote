@@ -19,7 +19,7 @@ import markdown2
 # Database
 #--------------------------------
 Base = declarative_base()
-engine = create_engine('sqlite:///zn.db', echo=False)
+engine = create_engine('sqlite:///znote.db', echo=False)
 
 def init_db():
     Base.metadata.create_all(engine)
@@ -42,6 +42,11 @@ class User(Base):
     email = Column(String(128))
     last_ip = Column(String(128)) 
 
+#article status
+PUBLISH = 0
+DRAFT = 1
+PAGE = 2
+
 #articles
 class Article(Base):
     __tablename__ = 'articles'
@@ -52,17 +57,19 @@ class Article(Base):
     category_id = Column(Integer, ForeignKey('categories.id'))
     title = Column(String(128), nullable=False)
     content = Column(Text, nullable=False)
-    status = Column(Enum('publish','draft','page'), default='publish')
+    status = Column(Integer, default=PUBLISH)
     slug = Column(String(128), default=None)
     view_count = Column(Integer, default=0)
     #relationship
-    author = relationship('User', backref=backref('articles', lazy='dynamic'))
-    category = relationship('Category', backref=backref('articles', lazy='dynamic'))
+    author = relationship('User', backref=backref('articles'))
+    category = relationship('Category', backref=backref('articles'))
+    comments = relationship('Comment', backref=backref('article', lazy='dynamic'))
 
     @hybrid_property
     def markdown(self):
         return markdown2.markdown(self.content)
 
+#categories
 class Category(Base):
     __tablename__ = 'categories'
     id = Column(Integer, primary_key=True)
@@ -75,6 +82,26 @@ class Config(Base):
     name = Column(String(128), nullable=False)
     value = Column(String(256), nullable=False)
 
+#comments
+class Comment(Base):
+    __tablename__ = 'comments'
+    id = Column(Integer, primary_key=True)
+    username = Column(String(64))
+    email = Column(String(128))
+    url = Column(String(128))
+    content = Column(Text, default=None)
+
+    article_id = Column(Integer, ForeignKey('articles.id'))
+    parent_id = Column(Integer, ForeignKey('comments.id'))
+
+    children = relationship('Comment')
+
+#links
+class Link(Base):
+    __tablename__ = 'links'
+    id = Column(Integer, primary_key=True)
+    url = Column(String(128), nullable=False)
+    title = Column(String(128), nullable=False)
 
 if __name__ == '__main__':
     import hashlib

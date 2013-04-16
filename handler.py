@@ -23,13 +23,13 @@ class BaseHandler(tornado.web.RequestHandler):
 
 class PageNotFoundHandler(BaseHandler):
     def get(self):
-        self.render('404.html')
+        self.render('404.html', api=self.api)
     def post(self):
-        self.render('404.html')
+        self.render('404.html', api=self.api)
         
 class IndexHandler(BaseHandler):
     def get(self):
-        articles = self.db.query(Article).filter(Article.status=='publish').all()
+        articles = self.db.query(Article).filter(Article.status==PUBLISH).all()
         self.render('index.html', articles=articles, api=self.api)
 
 class SingleHandler(BaseHandler):
@@ -40,13 +40,6 @@ class SingleHandler(BaseHandler):
         article.view_count += 1
         self.db.commit()
         self.render('single.html', article=article, api=self.api)
-
-class PageHandler(BaseHandler):
-    def get(self, aid):
-        article = self.db.query(Article).get(aid)
-        if not article: 
-            raise tornado.web.HTTPError(404)
-        self.render('page.html', article=article, api=self.api)
 
 class SlugHandler(BaseHandler):
     def get(self, slug):
@@ -121,7 +114,7 @@ class WriteHandler(BaseHandler):
         title = self.get_argument('title', default=None)
         content = self.get_argument('content', default=None)
         aid = self.get_argument('id', default='0')
-        status = self.get_argument('status', default='publish')
+        status = self.get_argument('status', default=PUBLISH)
         slug = self.get_argument('slug', default=None)
         cid = self.get_argument('category', default=None)
 
@@ -133,6 +126,9 @@ class WriteHandler(BaseHandler):
             self.write(u'''{"status": 1, "msg": "违法的状态"}''')
             return
 
+        if not slug:
+            slug = title
+
         if aid != '0':
             article = self.db.query(Article).get(aid)
             if not article:
@@ -143,8 +139,7 @@ class WriteHandler(BaseHandler):
             article.content = content
             article.status = status
             article.author_id = self.current_user.id
-            if slug:
-                article.slug = slug
+            article.slug = slug
             article.modified = datetime.now()
             if cid:
                 article.category_id = cid
