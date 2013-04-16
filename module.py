@@ -42,11 +42,6 @@ class User(Base):
     email = Column(String(128))
     last_ip = Column(String(128)) 
 
-#article status
-PUBLISH = 0
-DRAFT = 1
-PAGE = 2
-
 #articles
 class Article(Base):
     __tablename__ = 'articles'
@@ -57,13 +52,13 @@ class Article(Base):
     category_id = Column(Integer, ForeignKey('categories.id'))
     title = Column(String(128), nullable=False)
     content = Column(Text, nullable=False)
-    status = Column(Integer, default=PUBLISH)
+    status = Column(Enum('published','draft','page'), default='published')
     slug = Column(String(128), default=None)
     view_count = Column(Integer, default=0)
     #relationship
     author = relationship('User', backref=backref('articles'))
     category = relationship('Category', backref=backref('articles'))
-    comments = relationship('Comment', backref=backref('article', lazy='dynamic'))
+    comments = relationship('Comment', backref=backref('article'))
 
     @hybrid_property
     def markdown(self):

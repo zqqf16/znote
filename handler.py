@@ -29,7 +29,7 @@ class PageNotFoundHandler(BaseHandler):
         
 class IndexHandler(BaseHandler):
     def get(self):
-        articles = self.db.query(Article).filter(Article.status==PUBLISH).all()
+        articles = self.db.query(Article).filter(Article.status=='published').all()
         self.render('index.html', articles=articles, api=self.api)
 
 class SingleHandler(BaseHandler):
@@ -122,7 +122,7 @@ class WriteHandler(BaseHandler):
             self.write(u'''{"status": 1, "msg": "标题或者内容不能为空"}''')
             return
 
-        if status not in ('publish', 'draft', 'page'):
+        if status not in ('published', 'draft', 'page'):
             self.write(u'''{"status": 1, "msg": "违法的状态"}''')
             return
 
@@ -166,7 +166,7 @@ class ArticleHandler(BaseHandler):
         action = self.get_argument('action', default=None)
         article_id = self.get_argument('id', default=None)
         if not action or not article_id \
-                or action not in ('delete', 'publish', 'draft', 'fix'):
+                or action not in ('delete', 'published', 'draft', 'page'):
             self.write(u'''{"status": 1, "msg": "参数错误"}''')
             return
 
@@ -174,10 +174,8 @@ class ArticleHandler(BaseHandler):
         if not article:
             self.write(u'''{"status": 2, "msg": "文章没找到"}''')
 
-        if action == 'publish' or action == 'draft':
+        if action == 'published' or action == 'draft' or action == 'page':
             article.status = action
-        elif action == 'fix':
-            article.status = 'page'
         elif action == 'delete':
             self.db.delete(article)
 

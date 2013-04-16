@@ -7,7 +7,7 @@ class ModuleAPI():
     def __init__(self, db):
         self.db = db
 
-    def get_articles(self, type='publish'):
+    def get_articles(self, type='published'):
         return self.db.query(Article).filter(Article.status==type).all()
 
     def get_article_by_id(self, article_id):

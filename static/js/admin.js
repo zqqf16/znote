@@ -36,13 +36,16 @@
 		, if_status = false;
 		
 		switch(id) {
-			case "btn-publish": 
-			case "btn-unfix": if_status="publish"; break;
+			case "btn-published": 
+			case "btn-no-page": if_status="published"; break;
 			case "btn-draft": if_status="draft"; break;
 			case "btn-delete": if_status="delete"; break;
-			case "btn-fix": if_status="fix"; break;
+			case "btn-page": if_status="page"; break;
 			case "btn-edit": 
 				window.location.href="/admin/write?id="+$this.data("article-id");
+				break;
+			case "btn-write":
+				window.location.href="/admin/write";
 				break;
 		}
 		if (if_status) {
@@ -92,8 +95,8 @@
 		);
 	};
 
-	$doc.on('znote.write.publish', function(e) {
-		save("publish");
+	$doc.on('znote.write.published', function(e) {
+		save("published");
 	});
 	$doc.on('znote.write.draft', function(e) {
 		save("draft");
