@@ -1,17 +1,17 @@
-{% extends "admin_base.html" %}
+{% extends "base.html" %}
 {% block container %}
 
 <div class="row-fluid">
 	<input type="text" id="title" class="title input-xxlarge" autocomplete="off" placeholder="输入标题" {% if article %}value="{{article.title}}"{% end if %}/>
 	<div class="pull-right action-btn">
-		<a href="#" class="blue" data-toggle="modal" data-target="#option" data-keyboard="false" data-backdrop="false">属性</a>
+		<a href="#" data-toggle="modal" data-target="#option" data-keyboard="false" data-backdrop="false"><i class="icon-cog"></i>属性</a>
 		{% if article and article.status == 'page' %}
-		<a href="#" action-type="event" event-type="znote.write.page">保存</a>
+		<a href="#" action-type="event" event-type="znote.write.page"><i class="icon-bookmark"></i>保存</a>
 		{% else %}
-		<a href="#" class="yellow" action-type="event" event-type="znote.write.draft">保存</a>
-		<a href="#" class="green" action-type="event" event-type="znote.write.publish">发布</a>
+		<a href="#" action-type="event" event-type="znote.write.draft"><i class="icon-file"></i>保存</a>
+		<a href="#" action-type="event" event-type="znote.write.published"><i class="icon-share"></i>发布</a>
 		{% end if %}
-		<a href="/admin" class="red">返回</a>
+		<a href="/admin" class=""><i class="icon-ban-circle"></i>返回</a>
 	</div>
 </div>
 <div class="row-fluid">

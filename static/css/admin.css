@@ -48,33 +48,15 @@ body {
 .action-btn {
 	margin-bottom: 1px;
 	display: inline-block;
-	margin-top: 20px;
+	margin-top: 24px;
 }
 .action-btn a {
-	padding: 2px 10px;
-	background: #16A085;
-	color: #fff;
-	margin-left: 2px;
+	padding: 2px;
+	background: #fff;
+	color: #333;
 }
-.action-btn a.blue {
-	background: #2383C4;
-	color: #fff;
-}
-.action-btn a.purple {
-	background: #9B59B6;
-	color: #fff;
-}
-.action-btn a.red {
-	background: #DC2D1B;
-	color: #fff;
-}
-.action-btn a.green {
-	background: #2ECC71;
-	color: #fff;
-}
-.action-btn a.yellow {
-	background: #F1C40F;
-	color: #fff;
+.action-btn [class^="icon-"] {
+  margin-top: 3px;
 }
 
 .action-btn a:hover {
@@ -85,7 +67,7 @@ body {
 	margin-left: 0px !important;
 }
 
-.head .icon-cog {
+.head .icon-wrench {
 	vertical-align: baseline;
 }
 
@@ -308,6 +290,10 @@ h6 {
 .nav-type {
   margin-top: 10px;
   margin-bottom: 10px;
+}
+
+.row-fluid.header {
+	border-bottom: 1px solid #ddd;
 }
 
 ul.list {

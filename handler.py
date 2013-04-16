@@ -8,6 +8,8 @@ from datetime import datetime
 from module import * 
 from api import *
 
+theme_page = 'theme/default/'
+
 class BaseHandler(tornado.web.RequestHandler):
     def initialize(self, **kargs):
         self.db = get_session()
@@ -23,14 +25,14 @@ class BaseHandler(tornado.web.RequestHandler):
 
 class PageNotFoundHandler(BaseHandler):
     def get(self):
-        self.render('404.html', api=self.api)
+        self.render(theme_page+'404.html', api=self.api)
     def post(self):
-        self.render('404.html', api=self.api)
+        self.render(theme_page+'404.html', api=self.api)
         
 class IndexHandler(BaseHandler):
     def get(self):
-        articles = self.db.query(Article).filter(Article.status=='published').all()
-        self.render('index.html', articles=articles, api=self.api)
+        articles = self.db.query(Article).filter(Article.status=='published').order_by(Article.created.desc()).all()
+        self.render(theme_page+'index.html', articles=articles, api=self.api)
 
 class SingleHandler(BaseHandler):
     def get(self, aid):
@@ -39,14 +41,14 @@ class SingleHandler(BaseHandler):
             raise tornado.web.HTTPError(404)
         article.view_count += 1
         self.db.commit()
-        self.render('single.html', article=article, api=self.api)
+        self.render(theme_page+'single.html', article=article, api=self.api)
 
 class SlugHandler(BaseHandler):
     def get(self, slug):
         article = self.db.query(Article).filter(Article.slug==slug).first()
         if not article: 
             raise tornado.web.HTTPError(404)
-        self.render('single.html', article=article, api=self.api)
+        self.render(theme_page+'single.html', article=article, api=self.api)
 
 
 class LoginHandler(BaseHandler):
@@ -114,7 +116,7 @@ class WriteHandler(BaseHandler):
         title = self.get_argument('title', default=None)
         content = self.get_argument('content', default=None)
         aid = self.get_argument('id', default='0')
-        status = self.get_argument('status', default=PUBLISH)
+        status = self.get_argument('status', default='published')
         slug = self.get_argument('slug', default=None)
         cid = self.get_argument('category', default=None)
 

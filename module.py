@@ -58,7 +58,6 @@ class Article(Base):
     #relationship
     author = relationship('User', backref=backref('articles'))
     category = relationship('Category', backref=backref('articles'))
-    comments = relationship('Comment', backref=backref('article'))
 
     @hybrid_property
     def markdown(self):
@@ -90,6 +89,7 @@ class Comment(Base):
     parent_id = Column(Integer, ForeignKey('comments.id'))
 
     children = relationship('Comment')
+    article = relationship('Article', backref=backref('comments', lazy='dynamic'))
 
 #links
 class Link(Base):
