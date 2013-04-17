@@ -2,11 +2,26 @@
 {% block container %}
 <article>
 	{% if article.status != 'page' %}
-	<header class="page-header">
-		<h1><a href="/">{{article.title}}</a></h1>
-		<p>{{ article.created.strftime('%b %d %Y') }}</p>
+	<header class="title">
+		<h1>{{article.title}}</h1>
+		<span>
+			{% if article.category %}
+			<a class="blue" href="/category?id={{article.category.id}}">{{article.category.name}}</a>
+			{% else %}
+			<a class="blue" href="/category?id=0">未分类</a>
+			{% end if %} | {{ article.created.strftime('%b %d %Y') }}
+		</span>
 	</header>
 	{% end if %}
 	{% raw article.markdown %}
 </article>
+<section class="comment">
+	<h3>评论:</h3>
+	<ul>
+		<li>
+			<span>asdf</span>
+			<span>这是评论内容</span>
+		</li>
+	</ul>
+</section>
 {% end %}

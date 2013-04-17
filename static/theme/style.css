@@ -2,10 +2,32 @@ body {
 	padding-top: 60px;
 }
 
-.page-header a:hover {
+.title {
+	margin-bottom: 30px;
+}
+
+.title h1 {
+	margin-bottom: 0;
+}
+
+.title a {
+	color: #333;
+}
+.title a:hover {
 	text-decoration: none;
 }
 
 article {
-	padding-bottom: 30px;
+	padding-bottom: 20px;
+	margin-bottom: 40px;
+	border-bottom: 1px dashed #ccc;
 }
+
+.comment {
+	margin-bottom: 40px;
+}
+
+.comment ul{
+	list-style: none;
+}
+
