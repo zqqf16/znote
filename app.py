@@ -17,6 +17,7 @@ class App(tornado.web.Application):
     def __init__(self):
         handlers = [
             (r'/', IndexHandler),
+            (r'/comment', CommentHandler),
             (r'/login', LoginHandler),
             (r'/admin', AdminHandler),
             (r'/admin/write', WriteHandler),

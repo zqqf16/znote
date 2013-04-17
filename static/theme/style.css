@@ -7,7 +7,7 @@ body {
 }
 
 .title h1 {
-	margin-bottom: 0;
+	margin-bottom: 4px;
 }
 
 .title a {
@@ -27,7 +27,20 @@ article {
 	margin-bottom: 40px;
 }
 
-.comment ul{
+.comment h3 {
+	color: #666;
+}
+
+.comment ul {
 	list-style: none;
 }
 
+.comment ul li {
+	padding: 10px;
+	background-color: #f5f5f5;
+	margin-bottom: 10px;
+}
+
+.form-horizontal .control-group {
+	margin-bottom: 10px;
+}

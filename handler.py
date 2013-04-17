@@ -34,8 +34,43 @@ class PageNotFoundHandler(BaseHandler):
 class IndexHandler(BaseHandler):
     '''Index page'''
     def get(self):
-        articles = self.db.query(Article).filter(Article.status=='published').order_by(Article.created.desc()).all()
-        self.render(theme_page+'index.html', articles=articles, api=self.api)
+        ctg = self.get_argument('c', default=None)
+        articles = self.db.query(Article).filter(Article.status=='published')
+        if ctg == '0':
+            articles = articles.filter(Article.category_id == None)
+        elif ctg:
+            articles = articles.filter(Article.category_id == ctg)
+
+        self.render(theme_page+'index.html', articles=articles.order_by(Article.created.desc()).all(), api=self.api)
+
+class CommentHandler(BaseHandler):
+    def post(self):
+        aid = self.get_argument("article", default=None)
+        name = self.get_argument("name", default=None)
+        url = self.get_argument("url", default=None)
+        email = self.get_argument("emain", default=None)
+        content = self.get_argument("content", default=None)
+
+        redirect = self.request.headers['Referer']
+
+        if not name or not content:
+            self.redirect(redirect)
+
+        article = self.db.query(Article).get(aid)
+        if not article:
+            self.redirect(redirect)
+
+        comment = Comment(
+            username = name,
+            url = url,
+            email = email,
+            content = content,
+            article = article,
+        )
+
+        self.db.add(comment)
+        self.db.commit()
+        self.redirect(redirect)
 
 class SingleHandler(BaseHandler):
     '''Single article page'''

@@ -55,6 +55,7 @@ class Article(Base):
     status = Column(Enum('published','draft','page'), default='published')
     slug = Column(String(128), default=None)
     view_count = Column(Integer, default=0)
+    comment_status = Column(Enum('allow', 'forbid'), default='allow')
     #relationship
     author = relationship('User', backref=backref('articles'))
     category = relationship('Category', backref=backref('articles'))
@@ -113,7 +114,9 @@ if __name__ == '__main__':
     session.add(user)
 
     article = Article(title=u'Hello World', content=u'这是一篇默认文章', author=user)
+    c = Comment(username="zorro", url="www.baidu.com", email="zqqf16.gmail.com", content=u'测试')
     catg = Category(name=u'测试')
     article.category = catg
+    article.comments.append(c)
     session.add(article)
     session.commit()
