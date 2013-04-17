@@ -8,8 +8,9 @@ from datetime import datetime
 from module import * 
 from api import *
 
-theme_page = 'theme/default/'
+theme_page = 'theme/new/'
 
+# For frontend
 class BaseHandler(tornado.web.RequestHandler):
     def initialize(self, **kargs):
         self.db = get_session()
@@ -24,23 +25,29 @@ class BaseHandler(tornado.web.RequestHandler):
         return user
 
 class PageNotFoundHandler(BaseHandler):
+    '''404 error page'''
     def get(self):
         self.render(theme_page+'404.html', api=self.api)
     def post(self):
         self.render(theme_page+'404.html', api=self.api)
         
 class IndexHandler(BaseHandler):
+    '''Index page'''
     def get(self):
         articles = self.db.query(Article).filter(Article.status=='published').order_by(Article.created.desc()).all()
         self.render(theme_page+'index.html', articles=articles, api=self.api)
 
 class SingleHandler(BaseHandler):
+    '''Single article page'''
     def get(self, aid):
         article = self.db.query(Article).get(aid)
         if not article: 
             raise tornado.web.HTTPError(404)
+
+        #increase the view_count
         article.view_count += 1
         self.db.commit()
+
         self.render(theme_page+'single.html', article=article, api=self.api)
 
 class SlugHandler(BaseHandler):
@@ -48,9 +55,14 @@ class SlugHandler(BaseHandler):
         article = self.db.query(Article).filter(Article.slug==slug).first()
         if not article: 
             raise tornado.web.HTTPError(404)
+
+        #increase the view_count
+        article.view_count += 1
+        self.db.commit()
+
         self.render(theme_page+'single.html', article=article, api=self.api)
 
-
+# For backend
 class LoginHandler(BaseHandler):
     def get(self):
         if self.current_user:
@@ -62,10 +74,13 @@ class LoginHandler(BaseHandler):
         username = self.get_argument('username', default=None)
         password = self.get_argument('password', default=None)
         if not username or not password:
+            # arguments error
             self.render('login.html', user=username, status=1)
             return
+
         user = self.db.query(User).filter(User.username==username).first()
         if not user:
+            # not found
             self.render('login.html', user=username, status=2)
             return
 
@@ -86,18 +101,23 @@ class AdminHandler(BaseHandler):
         order_by = self.get_argument('order_by', default='default')
 
         result = self.db.query(Article)
+
         if category != 'all':
             c_id = None if category == 'none' else category
             result = result.filter(Article.category_id == c_id)
+
         if status != 'all':
             result = result.filter(Article.status == status)
+
         if order_by != 'default':
             order = {
                 'create': Article.created.desc(),
                 'modify': Article.modified.desc(),
                 'view': Article.view_count.desc(),
             }
-            result = result.order_by(order[order_by])
+
+            if order_by in order:
+                result = result.order_by(order[order_by])
 
         self.render('admin.html', articles=result.all(), api=self.api, 
             category=category, status=status, order_by=order_by)
@@ -136,7 +156,6 @@ class WriteHandler(BaseHandler):
             if not article:
                 self.write(u'''{"status": 2, "msg": "文章没找到"}''')
                 return
-                                        
             article.title = title
             article.content = content
             article.status = status
