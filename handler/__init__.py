@@ -3,5 +3,7 @@
 
 import admin
 import frontend
+import article
+import category
 
-__all__ = [admin, frontend]
+__all__ = [admin, frontend, article, category]

@@ -2,18 +2,19 @@
 # -*- coding: utf-8 -*-
 
 import hashlib
+import tornado
 from tornado.escape import json_encode
 from datetime import datetime
 
 from module import Article
 from base import BaseHandler
 
-class ArticleHandler(BaseHandler):
+class ShowHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        category = self.get_argument('c', default='all')
-        status = self.get_argument('s', default='all')
-        order_by = self.get_argument('o', default='default')
+        category = self.get_argument('category', default='all')
+        status = self.get_argument('status', default='all')
+        order_by = self.get_argument('order_by', default='default')
 
         result = self.db.query(Article)
 
@@ -40,8 +41,9 @@ class ArticleHandler(BaseHandler):
 class WriteHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        id = self.get_argument('id', default=None)
-        article = self.db.query(Article).get(id) if id else None
+        ''' write or edit article '''
+        aid = self.get_argument('id', default=None)
+        article = self.db.query(Article).get(aid) if aid else None
         self.render('write.html', article=article)
     
     @tornado.web.authenticated
@@ -56,11 +58,11 @@ class WriteHandler(BaseHandler):
         cid = self.get_argument('category', default=None)
 
         if not title or not content:
-            self.write(u'''{"status": 1, "msg": "标题或者内容不能为空"}''')
+            self.write(self._result(1, u'"标题或者内容不能为空"'))
             return
 
         if status not in ('published', 'draft', 'page'):
-            self.write(u'''{"status": 1, "msg": "违法的状态"}''')
+            self.write(self._result(2, u'违法的状态'))
             return
 
         if not slug:
@@ -69,8 +71,9 @@ class WriteHandler(BaseHandler):
         if aid != '0':
             article = self.db.query(Article).get(aid)
             if not article:
-                self.write(u'''{"status": 2, "msg": "文章没找到"}''')
+                self.write(self._result(3, u'文章不存在'))
                 return
+
             article.title = title
             article.content = content
             article.status = status
@@ -95,26 +98,31 @@ class WriteHandler(BaseHandler):
         rst = {'status': 0, 'article': {'id': article.id}}
         self.write(json_encode(rst))
 
-class ArticleOption(Base):
+class ActionHandler(BaseHandler):
     @tornado.web.authenticated
     def post(self):
         self.set_header('Content-Type', 'application/json; charset=UTF-8')
+
         action = self.get_argument('action', default=None)
         status = self.get_argument('status', default=None)
         aid = self.get_argument('id', default=None)
 
-        if not action or not aid:
-            self.write(u'''{"status": 1, "msg": "参数错误"}''')
+        if not action or action not in ('delete', 'change') or not aid:
+            self.write(self._result(1, u'参数错误'))
             return
 
-        article = self.db.query(Article).get(article_id)
-        if not article:
-            self.write(u'''{"status": 2, "msg": "文章没找到"}''')
+        if status and status not in ('published', 'draft', 'page'):
+            self.write(self._result(1, u'参数错误'))
+            return
 
-        if action == 'published' or action == 'draft' or action == 'page':
-            article.status = action
-        elif action == 'delete':
+        article = self.db.query(Article).get(aid)
+        if not article:
+            self.write(self._result(2, u'文章不存在'))
+
+        if action == 'delete':
             self.db.delete(article)
+        else:
+            article.status = status
 
         self.db.commit()
-        self.write('''{"status": 0}''')
+        self.write(self._result(0, u'成功'))

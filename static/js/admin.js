@@ -12,7 +12,7 @@
 	$doc.on('dblclick.list', list, function(e) {
 		var $this = $(this)
 		, index = $this.attr("list-index")
-		, url = "/admin/write?id=" + index;
+		, url = "/admin/article/write?id=" + index;
 		
 		window.location.href = url;
 	});
@@ -20,7 +20,7 @@
 	var btn = '[action-type="btn"] a';
 	$doc.on('status-toggle', btn, function(e, status, id) {
 		var $this = $(this)
-		, visible = $this.attr("visible-status") ;
+		, visible = $this.attr("visible") ;
 
 		if ((visible == status) || (visible == "all")) {
 			$this.data("article-id", id);
@@ -34,23 +34,10 @@
 		var $this = $(this)
 		, id = $this.attr("id")
 		, if_status = false;
-		
-		switch(id) {
-			case "btn-published": 
-			case "btn-no-page": if_status="published"; break;
-			case "btn-draft": if_status="draft"; break;
-			case "btn-delete": if_status="delete"; break;
-			case "btn-page": if_status="page"; break;
-			case "btn-edit": 
-				window.location.href="/admin/write?id="+$this.data("article-id");
-				break;
-			case "btn-write":
-				window.location.href="/admin/write";
-				break;
-		}
-		if (if_status) {
-			$.post('/admin/article',
-					{"action": if_status, "id": $this.data("article-id")},
+
+		var action = function(action, status) {
+			$.post('/admin/article/action',
+					{"action": action, "status": status, "id": $this.data("article-id")},
 					function(e) {
 						if (e.status == 0) {
 							window.location.reload();
@@ -59,6 +46,29 @@
 						}
 					}
 			);
+		};
+
+		
+		switch(id) {
+			case "btn-publish": 
+			case "btn-no-page": 
+				action('change', 'published');
+				break;
+			case "btn-draft": 
+				action('change', 'draft');
+				break;
+			case "btn-delete":
+				action('delete', '');
+				break;
+			case "btn-page": 
+				action('change', 'page'); 
+				break;
+			case "btn-edit": 
+				window.location.href="/admin/article/write?id="+$this.data("article-id");
+				break;
+			case "btn-write":
+				window.location.href="/admin/article/write";
+				break;
 		}
 	});
 
@@ -79,7 +89,7 @@
 		, $url = $("#url")
 		, $id = $("#id");
 
-		$.post("/admin/write", 
+		$.post("/admin/article/write", 
 				{"title": $("#title").val(),   "content": window.editor.getValue(),
 				 "category": $ctg.data("val"), "slug": $url.data("val"),
 				 "id": $id.val(),              "status": type,

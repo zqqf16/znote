@@ -22,3 +22,6 @@ class BaseHandler(tornado.web.RequestHandler):
         namespace = tornado.web.RequestHandler.get_template_namespace(self)
         namespace.update(api = module.QueryAPI(self.db))
         return namespace
+
+    def _result(self, num, msg):
+        return '''{"status": %d, "msg": "%s"}''' % (num, msg)

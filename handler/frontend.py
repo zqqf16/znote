@@ -3,22 +3,22 @@
 
 import tornado.web
 from module import * 
-from base import Base
+from base import BaseHandler
 
 theme_page = 'theme/new/'
 
 # For frontend
-class PageNotFound(Base):
+class PageNotFound(BaseHandler):
     '''404 error page'''
     def get(self):
         self.render(theme_page+'404.html')
     def post(self):
         self.render(theme_page+'404.html')
         
-class Index(Base):
+class Index(BaseHandler):
     '''Index page'''
     def get(self):
-        ctg = self.get_argument('c', default=None)
+        ctg = self.get_argument('category', default=None)
         articles = self.db.query(Article).filter(Article.status=='published')
         if ctg == '0':
             articles = articles.filter(Article.category_id == None)
@@ -27,7 +27,7 @@ class Index(Base):
 
         self.render(theme_page+'index.html', articles=articles.order_by(Article.created.desc()).all())
 
-class Comment(Base):
+class Comment(BaseHandler):
     def post(self):
         aid = self.get_argument("article", default=None)
         name = self.get_argument("name", default=None)
@@ -56,7 +56,7 @@ class Comment(Base):
         self.db.commit()
         self.redirect(redirect)
 
-class Single(Base):
+class Single(BaseHandler):
     '''Single article page'''
     def get(self, aid):
         article = self.db.query(Article).get(aid)
@@ -69,7 +69,7 @@ class Single(Base):
 
         self.render(theme_page+'single.html', article=article)
 
-class Slug(Base):
+class Slug(BaseHandler):
     def get(self, slug):
         article = self.db.query(Article).filter(Article.slug==slug).first()
         if not article: 

@@ -8,7 +8,7 @@ from tornado.options import define, options
 
 import os
 
-from handler import admin, frontend
+from handler import admin, frontend, article, category
 
 define("port", default=8888, help="run on the given port", type=int)
 
@@ -16,11 +16,17 @@ class App(tornado.web.Application):
     def __init__(self):
         handlers = [
             # Admin
-            (r'/admin[/]?', admin.Admin),
-            (r'/admin/article[/]?', admin.Article),
-            (r'/admin/article/write[/]?', admin.ArticleWrite),
-            (r'/admin/article/option[/]?', admin.ArticleOption),
-            (r'/login[/]?', admin.Login),
+            (r'/admin[/]?', admin.AdminHandler),
+
+            (r'/admin/article[/]?', article.ShowHandler),
+            (r'/admin/article/write[/]?', article.WriteHandler),
+            (r'/admin/article/action[/]?', article.ActionHandler),
+
+            (r'/admin/category[/]?', category.ShowHandler),
+            (r'/admin/category/add[/]?', category.AddHandler),
+            (r'/admin/category/delete[/]?', category.DeleteHandler),
+
+            (r'/login[/]?', admin.LoginHandler),
 
             # Frontend
             (r'/', frontend.Index),
