@@ -8,23 +8,26 @@ from tornado.options import define, options
 
 import os
 
-import db
-from handler import *
+from handler import admin, frontend
 
 define("port", default=8888, help="run on the given port", type=int)
 
 class App(tornado.web.Application):
     def __init__(self):
         handlers = [
-            (r'/', IndexHandler),
-            (r'/comment', CommentHandler),
-            (r'/login', LoginHandler),
-            (r'/admin', AdminHandler),
-            (r'/admin/write', WriteHandler),
-            (r'/admin/article', ArticleHandler),
-            (r'/article/([0-9]+).html', SingleHandler),
-            (r'/(.+)', SlugHandler),
-            (r'.*', PageNotFoundHandler),
+            # Admin
+            (r'/admin[/]?', admin.Admin),
+            (r'/admin/article[/]?', admin.Article),
+            (r'/admin/article/write[/]?', admin.ArticleWrite),
+            (r'/admin/article/option[/]?', admin.ArticleOption),
+            (r'/login[/]?', admin.Login),
+
+            # Frontend
+            (r'/', frontend.Index),
+            (r'/article/([0-9]+).html', frontend.Single),
+            (r'/comment[/]?', frontend.Comment),
+            (r'/([^/]+)[/]?', frontend.Slug),
+            (r'.*', frontend.PageNotFound),
         ]
 
         settings = {
@@ -35,8 +38,6 @@ class App(tornado.web.Application):
         }
 
         tornado.web.Application.__init__(self, handlers, **settings)
-
-        self.db = db.get_session()
 
 if __name__ == '__main__':
     options.parse_command_line()
