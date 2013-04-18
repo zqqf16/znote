@@ -22,7 +22,7 @@
 	<ul>
 		{% for comment in article.comments %}
 		<li id="comment-{{comment.id}}">
-		<div><a href="{{url_escape(comment.url)}}">{{escape(comment.username)}}</a></div>
+		<div><a href="{{comment.url}}">{{escape(comment.username)}}</a></div>
 			<div>{{escape(comment.content)}}</div>
 		</li>
 		{% end for %}

@@ -29,11 +29,11 @@ class App(tornado.web.Application):
             (r'/login[/]?', admin.LoginHandler),
 
             # Frontend
-            (r'/', frontend.Index),
-            (r'/article/([0-9]+).html', frontend.Single),
-            (r'/comment[/]?', frontend.Comment),
-            (r'/([^/]+)[/]?', frontend.Slug),
-            (r'.*', frontend.PageNotFound),
+            (r'/', frontend.IndexHandler),
+            (r'/article/([0-9]+).html', frontend.SingleHandler),
+            (r'/comment[/]?', frontend.CommentHandler),
+            (r'/([^/]+)[/]?', frontend.SlugHandler),
+            (r'.*', frontend.PageNotFoundHandler),
         ]
 
         settings = {

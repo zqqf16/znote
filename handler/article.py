@@ -58,11 +58,11 @@ class WriteHandler(BaseHandler):
         cid = self.get_argument('category', default=None)
 
         if not title or not content:
-            self.write(self._result(1, u'"标题或者内容不能为空"'))
+            self.write(self.__result(1, u'"标题或者内容不能为空"'))
             return
 
         if status not in ('published', 'draft', 'page'):
-            self.write(self._result(2, u'违法的状态'))
+            self.write(self.__result(2, u'违法的状态'))
             return
 
         if not slug:
@@ -71,7 +71,7 @@ class WriteHandler(BaseHandler):
         if aid != '0':
             article = self.db.query(Article).get(aid)
             if not article:
-                self.write(self._result(3, u'文章不存在'))
+                self.write(self.__result(3, u'文章不存在'))
                 return
 
             article.title = title
@@ -108,16 +108,16 @@ class ActionHandler(BaseHandler):
         aid = self.get_argument('id', default=None)
 
         if not action or action not in ('delete', 'change') or not aid:
-            self.write(self._result(1, u'参数错误'))
+            self.write(self.__result(1, u'参数错误'))
             return
 
         if status and status not in ('published', 'draft', 'page'):
-            self.write(self._result(1, u'参数错误'))
+            self.write(self.__result(1, u'参数错误'))
             return
 
         article = self.db.query(Article).get(aid)
         if not article:
-            self.write(self._result(2, u'文章不存在'))
+            self.write(self.__result(2, u'文章不存在'))
 
         if action == 'delete':
             self.db.delete(article)
@@ -125,4 +125,4 @@ class ActionHandler(BaseHandler):
             article.status = status
 
         self.db.commit()
-        self.write(self._result(0, u'成功'))
+        self.write(self.__result(0, u'成功'))

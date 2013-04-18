@@ -2,20 +2,21 @@
 # -*- coding: utf-8 -*-
 
 import tornado.web
+import re
 from module import * 
 from base import BaseHandler
 
 theme_page = 'theme/new/'
 
 # For frontend
-class PageNotFound(BaseHandler):
+class PageNotFoundHandler(BaseHandler):
     '''404 error page'''
     def get(self):
         self.render(theme_page+'404.html')
     def post(self):
         self.render(theme_page+'404.html')
         
-class Index(BaseHandler):
+class IndexHandler(BaseHandler):
     '''Index page'''
     def get(self):
         ctg = self.get_argument('category', default=None)
@@ -27,7 +28,7 @@ class Index(BaseHandler):
 
         self.render(theme_page+'index.html', articles=articles.order_by(Article.created.desc()).all())
 
-class Comment(BaseHandler):
+class CommentHandler(BaseHandler):
     def post(self):
         aid = self.get_argument("article", default=None)
         name = self.get_argument("name", default=None)
@@ -44,6 +45,9 @@ class Comment(BaseHandler):
         if not article:
             self.redirect(redirect)
 
+        if not re.match(r'(http://)|(https://)', url):
+            url = 'http://' + url
+
         comment = Comment(
             username = name,
             url = url,
@@ -56,7 +60,7 @@ class Comment(BaseHandler):
         self.db.commit()
         self.redirect(redirect)
 
-class Single(BaseHandler):
+class SingleHandler(BaseHandler):
     '''Single article page'''
     def get(self, aid):
         article = self.db.query(Article).get(aid)
@@ -69,7 +73,7 @@ class Single(BaseHandler):
 
         self.render(theme_page+'single.html', article=article)
 
-class Slug(BaseHandler):
+class SlugHandler(BaseHandler):
     def get(self, slug):
         article = self.db.query(Article).filter(Article.slug==slug).first()
         if not article: 
