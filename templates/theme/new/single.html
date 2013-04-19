@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block container %}
+<article>
+	{% if article.status != 'page' %}
+	<header class="title">
+		<h1>{{article.title}}</h1>
+		<span>
+			{% if article.category %}
+			<a class="blue" href="/?c={{article.category.id}}">{{article.category.name}}</a>
+			{% else %}
+			<a class="blue" href="/?c=0">未分类</a>
+			{% end if %} | {{ article.created.strftime('%b %d %Y') }}
+		</span>
+	</header>
+	{% end if %}
+	{% raw article.markdown %}
+</article>
+{% if article.comment_status == 'allow' %}
+<section class="comment">
+	{% if article.comments %}
+	<h3>评论:</h3>
+	<ul>
+		{% for comment in article.comments %}
+		<li id="comment-{{comment.id}}">
+		<div><a href="{{comment.url}}">{{escape(comment.username)}}</a></div>
+			<div>{{escape(comment.content)}}</div>
+		</li>
+		{% end for %}
+	</ul>
+	{% end if %}
+	<h3>留下评论:</h3>
+	<form class="form-horizontal" id="form-comment" action="/comment" method="POST">
+		<div class="control-group">
+			<input type="text" name="name" id="input-name" placeholder="昵称">
+			<span class="help-inline">*必填</span>
+		</div>
+		<div class="control-group">
+			<input type="text" name="email" class="span4 error" id="input-email" placeholder="Email">
+			<span class="help-inline">可选, 绝对保密，只是用来显示头像</span>
+		</div>
+		<div class="control-group">
+			<input type="text" name="url" class="span4" id="input-url" placeholder="个人主页">
+			<span class="help-inline">可选</span>
+		</div>
+		<div class="control-group">
+			<textarea class="span6" name="content" rows="3" id="input-content" placeholder="评论内容"></textarea>
+		</div>
+		<div class="control-group">
+			<button type="submit" class="btn">提交评论</button>
+		</div>
+		<input type="hidden" name="article" value="{{article.id}}"/>
+	</form>
+	<script>
+		$("#form-comment").submit(function(e){
+			var name = $("#input-name").val();
+			var content = $("#input-content").val();
+			var flag = false;
+			if (name == null || name == '' || name == 'undefined') {
+				$('#input-name').parent().addClass('error');
+				flag = true;
+			}
+			if (content == null || content == '' || content == 'undefined') {
+				$('#input-content').parent().addClass('error');
+				flag = true;
+			}
+			if (flag) {
+				return false;
+			}
+		});
+	</script>
+</section>
+{% end if %}
+{% end %}

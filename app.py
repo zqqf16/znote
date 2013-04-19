@@ -8,22 +8,32 @@ from tornado.options import define, options
 
 import os
 
-import db
-from handler import *
+from handler import admin, frontend, article, category
 
 define("port", default=8888, help="run on the given port", type=int)
 
 class App(tornado.web.Application):
     def __init__(self):
         handlers = [
-            (r'/', IndexHandler),
-            (r'/login', LoginHandler),
-            (r'/admin', AdminHandler),
-            (r'/admin/write', WriteHandler),
-            (r'/admin/article', ArticleHandler),
-            (r'/article/([0-9]+).html', SingleHandler),
-            (r'/(.+)', SlugHandler),
-            (r'.*', PageNotFoundHandler),
+            # Admin
+            (r'/admin[/]?', admin.AdminHandler),
+
+            (r'/admin/article[/]?', article.ShowHandler),
+            (r'/admin/article/write[/]?', article.WriteHandler),
+            (r'/admin/article/action[/]?', article.ActionHandler),
+
+            (r'/admin/category[/]?', category.ShowHandler),
+            (r'/admin/category/add[/]?', category.AddHandler),
+            (r'/admin/category/delete[/]?', category.DeleteHandler),
+
+            (r'/login[/]?', admin.LoginHandler),
+
+            # Frontend
+            (r'/', frontend.IndexHandler),
+            (r'/article/([0-9]+).html', frontend.SingleHandler),
+            (r'/comment[/]?', frontend.CommentHandler),
+            (r'/([^/]+)[/]?', frontend.SlugHandler),
+            (r'.*', frontend.PageNotFoundHandler),
         ]
 
         settings = {
@@ -34,8 +44,6 @@ class App(tornado.web.Application):
         }
 
         tornado.web.Application.__init__(self, handlers, **settings)
-
-        self.db = db.get_session()
 
 if __name__ == '__main__':
     options.parse_command_line()

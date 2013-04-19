@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+	<title>Znote</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!--CSS-->
+	<link rel="stylesheet" href="/static/theme/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/theme/style.css">
+	<link rel="stylesheet" href="/static/theme/bootstrap-responsive.min.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="shortcut icon" href="/static/image/favicon.png" type="image/png">
+	<script src="/static/js/jquery-1.9.1.min.js"></script>
+	<script src="/static/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<header class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+		  <a type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		  </a>
+          <a class="brand" href="/">Znote</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="/">首页</a></li>
+              {% for page in api.get_articles(type='page') %}
+              <li><a href="/article/{{page.id}}.html">{{page.title}}</a></li>
+              {% end for %}
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </header>
+    <div class="container-fluid">
+		<div class="row-fluid">
+			<div class="span8 offset2">
+			{% block container %}{% end %}
+			</div>
+		</div>
+    </div>
+</body>
+</html>
