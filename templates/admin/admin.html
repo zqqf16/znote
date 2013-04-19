@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block container %}
 <div class="row-fluid header">
+	<div class="span6">
 	<h1 class="span6">所有文章 <a href="#query" data-toggle="modal" class="head"><i class="icon-wrench"></i></a></h1>
   <div class="pull-right action-btn" id="btn-bar" action-type="btn" >
 	<a href="#" class="hide" visible="published" id="btn-page"><i class="icon-bookmark"></i>置顶</a>
@@ -11,9 +12,10 @@
 	<a href="#" class="hide" visible="all" id="btn-edit"><i class="icon-edit"></i>编辑</a>
 	<a href="#" visible="all" id="btn-write"><i class="icon-pencil"></i>撰写</a>
   </div>
+  </div>
 </div>
   <div class="row-fluid">
-    <ul class="list">
+    <ul class="list span6">
     {% for article in articles %}
 	  <li action-type="list" list-index="{{article.id}}" list-status="{{article.status}}" event-target="#btn-bar">
         <span class="hidden-phone span2 from">
@@ -83,4 +85,3 @@
   </form>
 </div>
 {% end %}
-	<a href="#" class="blue" visible-status="all" id="status-edit"></a>

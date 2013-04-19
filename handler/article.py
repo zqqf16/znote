@@ -35,7 +35,7 @@ class ShowHandler(BaseHandler):
             if order_by in order:
                 result = result.order_by(order[order_by])
 
-        self.render('admin.html', articles=result.all(), 
+        self.render('admin/admin.html', articles=result.all(), 
             category=category, status=status, order_by=order_by)
 
 class WriteHandler(BaseHandler):
@@ -44,7 +44,7 @@ class WriteHandler(BaseHandler):
         ''' write or edit article '''
         aid = self.get_argument('id', default=None)
         article = self.db.query(Article).get(aid) if aid else None
-        self.render('write.html', article=article)
+        self.render('admin/write.html', article=article)
     
     @tornado.web.authenticated
     def post(self):

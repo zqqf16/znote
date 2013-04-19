@@ -14,20 +14,20 @@ class LoginHandler(BaseHandler):
         if self.current_user:
             self.redirect('/admin')
         else:
-            self.render('login.html', user=None, status=0)
+            self.render('admin/login.html', user=None, status=0)
 
     def post(self):
         username = self.get_argument('username', default=None)
         password = self.get_argument('password', default=None)
         if not username or not password:
             # arguments error
-            self.render('login.html', user=username, status=1)
+            self.render('admin/login.html', user=username, status=1)
             return
 
         user = self.db.query(module.User).filter(module.User.username==username).first()
         if not user:
             # not found
-            self.render('login.html', user=username, status=2)
+            self.render('admin/login.html', user=username, status=2)
             return
 
         hash = hashlib.md5(password+user.salt).hexdigest()
@@ -37,7 +37,7 @@ class LoginHandler(BaseHandler):
             self.redirect(self.get_argument('next', default='/admin'))
             return
         else:
-            self.render('login.html', user=username, status=3)
+            self.render('admin/login.html', user=username, status=3)
 
 class AdminHandler(BaseHandler):
     @tornado.web.authenticated
@@ -65,5 +65,5 @@ class AdminHandler(BaseHandler):
             if order_by in order:
                 result = result.order_by(order[order_by])
 
-        self.render('admin.html', articles=result.all(), 
+        self.render('admin/admin.html', articles=result.all(), 
             category=category, status=status, order_by=order_by)
