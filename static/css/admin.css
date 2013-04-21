@@ -267,11 +267,8 @@ h6 {
           	border-radius: 0px 5px 5px 5px;
 	border: 2px solid #eee;
 	position: relative;
-}
-#content {
-	padding: 20px;
 	margin-left: -2px;
-	min-height: 256px;
+	min-height: 400px;
 }
 
 .main .title h4{
